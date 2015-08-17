@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Map;
 import java.util.Set;
 
@@ -491,7 +493,7 @@ public class OkHttpClientManager
             {
                 File file = files[i];
                 String fileName = file.getName();
-                fileBody = RequestBody.create(MediaType.parse("image/png"), file);
+                fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileName)), file);
                 //TODO 根据文件名设置contentType
                 builder.addPart(Headers.of("Content-Disposition",
                                 "form-data; name=\"" + fileKeys[i] + "\"; filename=\"" + fileName + "\""),
@@ -504,6 +506,17 @@ public class OkHttpClientManager
                 .url(url)
                 .post(requestBody)
                 .build();
+    }
+
+    private String guessMimeType(String path)
+    {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentTypeFor = fileNameMap.getContentTypeFor(path);
+        if (contentTypeFor == null)
+        {
+            contentTypeFor = "application/octet-stream";
+        }
+        return contentTypeFor;
     }
 
 
