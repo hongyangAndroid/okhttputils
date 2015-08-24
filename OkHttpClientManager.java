@@ -45,6 +45,7 @@ public class OkHttpClientManager
     private OkHttpClientManager()
     {
         mOkHttpClient = new OkHttpClient();
+        mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
         mDelivery = new Handler(Looper.getMainLooper());
         mGson = new Gson();
     }
