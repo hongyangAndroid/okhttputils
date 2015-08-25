@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile files('libs/okhttp-2.4.0.jar')
     compile files('libs/gson-2.2.1.jar')
+    compile files('libs/okio-1.4.0.jar')
 }

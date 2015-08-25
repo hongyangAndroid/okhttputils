@@ -40,9 +40,6 @@ new OkHttpClientManager.ResultCallback<User>()
 同样支持List<User>这种集合的方式。
 
 
-
-
-
 # 用法
 
 对于Android Studio的用户，可以选择添加:
@@ -134,21 +131,43 @@ OkHttpClientManager.getAsyn("http://192.168.56.1:8080/okHttpServer/user!getUsers
 
 ```java
 File file = new File(Environment.getExternalStorageDirectory(), "test1.txt");
-        OkHttpClientManager.postAsyn("http://192.168.1.103:8080/okHttpServer/fileUpload",//
-                callback,//
-                file,// 文件
-                "mFile",// 文件域的name
-                new OkHttpClientManager.Param[]{
-                new OkHttpClientManager.Param("username", "zhy")}//一般的键值对，可为null
-        );
+
+if (!file.exists())
+{
+ 
+  return;
+}
+
+OkHttpClientManager.getUploadDelegate().postAsyn("http://192.168.1.103:8080/okHttpServer/fileUpload",//
+      "mFile",//
+      file,//
+      new OkHttpClientManager.Param[]{
+              new OkHttpClientManager.Param("username", "zhy"),
+              new OkHttpClientManager.Param("password", "123")},//
+      new OkHttpClientManager.ResultCallback<String>()
+      {
+          @Override
+          public void onError(Request request, Exception e)
+          {
+              e.printStackTrace();
+          }
+
+          @Override
+          public void onResponse(String filePath)
+          {
+              Log.e("TAG", filePath);
+          }
+      }
+);
 ```
 
 ### 显示图片
 
 ```java
- OkHttpClientManager.displayImage(
- 				mImageView, 
- 				"http://images.csdn.net/20150817/1.jpg");
+  OkHttpClientManager.getDisplayImageDelegate()
+  	.displayImage(mImageView, 
+  		"http://images.csdn.net/20150817/1.jpg");
+ 
 
 ```
 会自动根据ImageView的大小进行压缩。
@@ -156,24 +175,22 @@ File file = new File(Environment.getExternalStorageDirectory(), "test1.txt");
 ### 大文件下载
 
 ```java
- OkHttpClientManager.downloadAsyn(
- 		//文件路径
- 		"http://192.168.1.103:8080/okHttpServer/files/messenger_01.png", 		//文件存储路径
- 		Environment.getExternalStorageDirectory().getAbsolutePath(), 
- 		//回调
- 		new OkHttpClientManager.ResultCallback<String>()
-        {
-            @Override
-            public void onFailure(Request request, IOException e)
-            {
-            }
+ OkHttpClientManager.getDownloadDelegate().downloadAsyn(
+ "url",
+ Environment.getExternalStorageDirectory().getAbsolutePath(),
+ new OkHttpClientManager.ResultCallback<String>()
+ {
+     @Override
+     public void onError(Request request, Exception e)
+     {
+     }
 
-            @Override
-            public void onResponse(String response)
-            {
-					//如果成功，response为下载完成后文件的完整路径
-            }
-        });
+     @Override
+     public void onResponse(String response)
+     {
+         Toast.makeText(MainActivity.this, response + "下载成功", Toast.LENGTH_SHORT).show();
+     }
+ });
 ```
 
 ### 自签名网站https的访问
