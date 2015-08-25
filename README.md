@@ -14,6 +14,7 @@ sample项目的代码也上传了，里面包含依赖神马的，不过里面�
 * 加载图片
 * 支持请求回调，直接返回对象、对象集合
 * 支持session的保持
+* 支持自签名网站https的访问，提供方法设置下证书就行
 
 例如：服务器返回：`{"username":"zhy","password":"123"}`
 
@@ -173,4 +174,45 @@ File file = new File(Environment.getExternalStorageDirectory(), "test1.txt");
 					//如果成功，response为下载完成后文件的完整路径
             }
         });
- ```
+```
+
+### 自签名网站https的访问
+
+非常简单，拿到xxx.cert的证书。
+
+然后调用
+
+```xml
+
+OkHttpClientManager.getInstance()
+       .setCertificates(inputstream);
+```
+
+建议使用方式，例如我的证书放在assets目录：
+
+```java
+
+/**
+ * Created by zhy on 15/8/25.
+ */
+public class MyApplication extends Application
+{
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+
+        try
+        {
+            OkHttpClientManager.getInstance()
+                    .setCertificates(getAssets().open("aaa.cer"),
+                            getAssets().open("server.cer"));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+```
+即可。别忘了注册Application。
+

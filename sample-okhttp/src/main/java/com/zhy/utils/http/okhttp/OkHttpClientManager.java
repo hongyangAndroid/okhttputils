@@ -25,10 +25,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Created by zhy on 15/8/17.
@@ -40,14 +53,105 @@ public class OkHttpClientManager
     private Handler mDelivery;
     private Gson mGson;
 
+
     private static final String TAG = "OkHttpClientManager";
+
+
+    /**
+     * <pre>
+     * public class MyApplication extends Application
+     * {
+     *
+     * @Override public void onCreate()
+     * {
+     * super.onCreate();
+     * try
+     * {
+     * OkHttpClientManager.getInstance()
+     * .setCertificates(getAssets().open("aaa.cer"),
+     * getAssets().open("server.cer"));
+     * } catch (IOException e)
+     * {
+     * e.printStackTrace();
+     * }
+     * }
+     * }
+     * </pre>
+     */
+    public void setCertificates(InputStream... certificates)
+    {
+        try
+        {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null);
+            int index = 0;
+            for (InputStream certificate : certificates)
+            {
+                String certificateAlias = Integer.toString(index++);
+                keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
+
+                try
+                {
+                    if (certificate != null)
+                        certificate.close();
+                } catch (IOException e)
+                {
+                }
+
+            }
+
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.
+                    getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+//            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+//            keyManagerFactory.init(keyStore, "keystore_pass".toCharArray());
+            sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
+            mOkHttpClient.setSslSocketFactory(sslContext.getSocketFactory());
+
+
+        } catch (CertificateException e)
+        {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        } catch (KeyStoreException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (KeyManagementException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private OkHttpClientManager()
     {
         mOkHttpClient = new OkHttpClient();
+        //cookie enabled
+        mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
         mDelivery = new Handler(Looper.getMainLooper());
         mGson = new Gson();
+
+        /*
+        just for test !!!
+        mOkHttpClient.setHostnameVerifier(new HostnameVerifier()
+        {
+            @Override
+            public boolean verify(String hostname, SSLSession session)
+            {
+                return true;
+            }
+        });*/
+
     }
+
 
     public static OkHttpClientManager getInstance()
     {
@@ -546,6 +650,11 @@ public class OkHttpClientManager
         }
         return res;
     }
+
+    private static final String SESSION_KEY = "Set-Cookie";
+    private static final String mSessionKey = "JSESSIONID";
+
+    private Map<String, String> mSessions = new HashMap<String, String>();
 
     private void deliveryResult(final ResultCallback callback, Request request)
     {

@@ -8,10 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.zhy.utils.http.okhttp.OkHttpClientManager;
-import com.zhy.utils.http.okhttp.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +20,6 @@ public class MainActivity extends AppCompatActivity
 
     private TextView mTv;
     private ImageView mImageView;
-    private OkHttpClient mOkHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,8 +28,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        mOkHttpClient = new OkHttpClient();
 
         mTv = (TextView) findViewById(R.id.id_textview);
         mImageView = (ImageView) findViewById(R.id.id_imageview);
@@ -97,13 +92,13 @@ public class MainActivity extends AppCompatActivity
                 mTv.setText(u);
             }
         });
-
-
     }
 
     public void getHtml(View view)
     {
-        OkHttpClientManager.getAsyn("https://github.com/hongyangAndroid", new OkHttpClientManager.ResultCallback<String>()
+        //https://192.168.56.1:8443/
+        //
+        OkHttpClientManager.getAsyn("https://kyfw.12306.cn/otn/", new OkHttpClientManager.ResultCallback<String>()
         {
             @Override
             public void onError(Request request, Exception e)
