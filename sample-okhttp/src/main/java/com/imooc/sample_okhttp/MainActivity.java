@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.squareup.okhttp.Request;
 import com.zhy.utils.http.okhttp.OkHttpClientManager;
+import com.zhy.utils.http.okhttp.OkHttpClientManager.ResultCallback;
 
 import java.io.File;
 import java.util.List;
@@ -21,6 +22,24 @@ public class MainActivity extends AppCompatActivity
     private TextView mTv;
     private ImageView mImageView;
 
+    public abstract class MyResultCallback<T> extends ResultCallback<T>
+    {
+
+        @Override
+        public void onBefore()
+        {
+            super.onBefore();
+            setTitle("loading...");
+        }
+
+        @Override
+        public void onAfter()
+        {
+            super.onAfter();
+            setTitle("Sample-okHttp");
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -30,12 +49,15 @@ public class MainActivity extends AppCompatActivity
         mTv = (TextView) findViewById(R.id.id_textview);
         mImageView = (ImageView) findViewById(R.id.id_imageview);
 
+
+
     }
 
     public void getUser(View view)
     {
+
         OkHttpClientManager.getAsyn("https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson",
-                new OkHttpClientManager.ResultCallback<User>()
+                new MyResultCallback<User>()
                 {
                     @Override
                     public void onError(Request request, Exception e)
@@ -55,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     public void getUsers(View view)
     {
         OkHttpClientManager.getAsyn("https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/users.gson",
-                new OkHttpClientManager.ResultCallback<List<User>>()
+                new MyResultCallback<List<User>>()
                 {
                     @Override
                     public void onError(Request request, Exception e)
@@ -76,20 +98,21 @@ public class MainActivity extends AppCompatActivity
 
     public void getSimpleString(View view)
     {
-        OkHttpClientManager.getAsyn("https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson", new OkHttpClientManager.ResultCallback<String>()
-        {
-            @Override
-            public void onError(Request request, Exception e)
-            {
-                e.printStackTrace();
-            }
+        OkHttpClientManager.getAsyn("https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson",
+                new MyResultCallback<String>()
+                {
+                    @Override
+                    public void onError(Request request, Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onResponse(String u)
-            {
-                mTv.setText(u);
-            }
-        });
+                    @Override
+                    public void onResponse(String u)
+                    {
+                        mTv.setText(u);
+                    }
+                });
     }
 
     public void getHtml(View view)
@@ -97,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         //https://192.168.56.1:8443/
         //https://kyfw.12306.cn/otn/
         //https://192.168.187.1:8443/
-        OkHttpClientManager.getAsyn("http://www.csdn.net/", new OkHttpClientManager.ResultCallback<String>()
+        OkHttpClientManager.getAsyn("http://www.csdn.net/", new MyResultCallback<String>()
         {
             @Override
             public void onError(Request request, Exception e)
@@ -115,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
     public void getHttpsHtml(View view)
     {
-        OkHttpClientManager.getAsyn("https://kyfw.12306.cn/otn/", new OkHttpClientManager.ResultCallback<String>()
+        OkHttpClientManager.getAsyn("https://kyfw.12306.cn/otn/", new MyResultCallback<String>()
         {
             @Override
             public void onError(Request request, Exception e)
@@ -155,7 +178,7 @@ public class MainActivity extends AppCompatActivity
                 new OkHttpClientManager.Param[]{
                         new OkHttpClientManager.Param("username", "zhy"),
                         new OkHttpClientManager.Param("password", "123")},//
-                new OkHttpClientManager.ResultCallback<String>()
+                new MyResultCallback<String>()
                 {
                     @Override
                     public void onError(Request request, Exception e)
@@ -177,7 +200,7 @@ public class MainActivity extends AppCompatActivity
     {
         OkHttpClientManager.getDownloadDelegate().downloadAsyn("https://github.com/hongyangAndroid/okhttp-utils/blob/master/gson-2.2.1.jar?raw=true",
                 Environment.getExternalStorageDirectory().getAbsolutePath(),
-                new OkHttpClientManager.ResultCallback<String>()
+                new MyResultCallback<String>()
                 {
                     @Override
                     public void onError(Request request, Exception e)

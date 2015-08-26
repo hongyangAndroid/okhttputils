@@ -207,6 +207,10 @@ public class OkHttpClientManager
         getInstance().getPostDelegate().postAsyn(url, bodyStr, callback);
     }
 
+    public static void post(String url, String bodyStr, final ResultCallback callback) throws IOException
+    {
+        getInstance().getPostDelegate().post(url, bodyStr);
+    }
 
     private String guessMimeType(String path)
     {
@@ -419,6 +423,9 @@ public class OkHttpClientManager
     //====================PostDelegate=======================
     public class PostDelegate
     {
+        private final MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream;charset=utf-8");
+        private final MediaType MEDIA_TYPE_STRING = MediaType.parse("text/plain;charset=utf-8");
+
         /**
          * 同步的Post请求
          */
@@ -453,16 +460,55 @@ public class OkHttpClientManager
             deliveryResult(callback, request);
         }
 
+
+        /**
+         * 同步的Post请求:直接将bodyStr以写入请求体
+         */
+        public Response post(String url, String bodyStr) throws IOException
+        {
+            RequestBody body = RequestBody.create(MEDIA_TYPE_STRING, bodyStr);
+            Request request = buildPostRequest(url, body);
+            Response response = mOkHttpClient.newCall(request).execute();
+            return response;
+        }
+
+        /**
+         * 同步的Post请求:直接将bodyFile以写入请求体
+         */
+        public Response post(String url, File bodyFile) throws IOException
+        {
+            RequestBody body = RequestBody.create(MEDIA_TYPE_STREAM, bodyFile);
+            Request request = buildPostRequest(url, body);
+            Response response = mOkHttpClient.newCall(request).execute();
+            return response;
+        }
+
+        /**
+         * 同步的Post请求
+         */
+        public Response post(String url, byte[] bodyBytes) throws IOException
+        {
+            RequestBody body = RequestBody.create(MEDIA_TYPE_STREAM, bodyBytes);
+            Request request = buildPostRequest(url, body);
+            Response response = mOkHttpClient.newCall(request).execute();
+            return response;
+        }
+
         /**
          * 直接将bodyStr以写入请求体
          */
         public void postAsyn(String url, String bodyStr, final ResultCallback callback)
         {
-            RequestBody body = RequestBody.create(MediaType.parse("text/plain;charset=utf-8"), bodyStr);
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(body)
-                    .build();
+            postAsyn(url, bodyStr, MediaType.parse("text/plain;charset=utf-8"), callback);
+        }
+
+        /**
+         * 直接将bodyStr以写入请求体
+         */
+        public void postAsyn(String url, String bodyStr, MediaType type, final ResultCallback callback)
+        {
+            RequestBody body = RequestBody.create(type, bodyStr);
+            Request request = buildPostRequest(url, body);
             deliveryResult(callback, request);
         }
 
@@ -471,7 +517,15 @@ public class OkHttpClientManager
          */
         public void postAsyn(String url, File bodyFile, final ResultCallback callback)
         {
-            RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), bodyFile);
+            postAsyn(url, bodyFile, MediaType.parse("application/octet-stream;charset=utf-8"), callback);
+        }
+
+        /**
+         * 直接将bodyFile以写入请求体
+         */
+        public void postAsyn(String url, File bodyFile, MediaType type, final ResultCallback callback)
+        {
+            RequestBody body = RequestBody.create(type, bodyFile);
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)
@@ -484,12 +538,29 @@ public class OkHttpClientManager
          */
         public void postAsyn(String url, byte[] bodyBytes, final ResultCallback callback)
         {
-            RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), bodyBytes);
+            postAsyn(url, bodyBytes, MediaType.parse("application/octet-stream;charset=utf-8"), callback);
+        }
+
+        /**
+         * 直接将bodyBytes以写入请求体
+         */
+        public void postAsyn(String url, byte[] bodyBytes, MediaType type, final ResultCallback callback)
+        {
+            RequestBody body = RequestBody.create(type, bodyBytes);
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)
                     .build();
             deliveryResult(callback, request);
+        }
+
+        private Request buildPostRequest(String url, RequestBody body)
+        {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+            return request;
         }
 
 
