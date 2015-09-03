@@ -37,11 +37,11 @@ public class MyApplication extends Application
         try
         {
             OkHttpClientManager.getInstance()
-                    .setCertificates(
-                            new InputStream[]{
+                    .getHttpsDelegate()
+                    .setCertificates(new InputStream[]{
                                     new Buffer()
-                                    .writeUtf8(CER_12306)
-                                    .inputStream(), getAssets().open("zhy_server.cer")}
+                                            .writeUtf8(CER_12306)
+                                            .inputStream(), getAssets().open("zhy_server.cer")}
                     );
         } catch (IOException e)
         {

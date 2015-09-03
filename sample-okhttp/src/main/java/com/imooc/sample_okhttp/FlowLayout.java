@@ -2,7 +2,6 @@ package com.imooc.sample_okhttp;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -73,10 +72,6 @@ public class FlowLayout extends ViewGroup
 				height += lineHeight;
 			}
 		}
-
-		Log.e("TAG", "sizeWidth = " + sizeWidth);
-		Log.e("TAG", "sizeHeight = " + sizeHeight);
-
 		setMeasuredDimension(
 				//
 				modeWidth == MeasureSpec.EXACTLY ? sizeWidth : width + getPaddingLeft() + getPaddingRight(),

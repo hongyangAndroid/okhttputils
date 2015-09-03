@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity
     {
 
         @Override
-        public void onBefore()
+        public void onBefore(Request request)
         {
-            super.onBefore();
+            super.onBefore(request);
             setTitle("loading...");
         }
 
@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity
 
         mTv = (TextView) findViewById(R.id.id_textview);
         mImageView = (ImageView) findViewById(R.id.id_imageview);
-
-
-
     }
 
     public void getUser(View view)
@@ -125,15 +122,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onError(Request request, Exception e)
             {
+                Log.e("TAG", "onError" + e.getMessage());
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(String u)
             {
+                Log.e("TAG", "onResponse" + MainActivity.this);
                 mTv.setText(u);
             }
-        });
+        }, this);
     }
 
     public void getHttpsHtml(View view)
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity
             {
                 mTv.setText(u);
             }
-        });
+        }, this);
 
 
     }
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity
     public void getImage(View view)
     {
         mTv.setText("");
-        OkHttpClientManager.getDisplayImageDelegate().displayImage(mImageView, "http://images.csdn.net/20150817/1.jpg");
+        OkHttpClientManager.getDisplayImageDelegate().displayImage(mImageView, "http://images.csdn.net/20150817/1.jpg", this);
     }
 
     public void uploadFile(View view)
@@ -172,27 +171,28 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        OkHttpClientManager.getUploadDelegate().postAsyn("http://192.168.1.103:8080/okHttpServer/fileUpload",//
-                "mFile",//
-                file,//
-                new OkHttpClientManager.Param[]{
-                        new OkHttpClientManager.Param("username", "zhy"),
-                        new OkHttpClientManager.Param("password", "123")},//
-                new MyResultCallback<String>()
-                {
-                    @Override
-                    public void onError(Request request, Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+        OkHttpClientManager.getUploadDelegate()
+                .postAsyn("http://192.168.1.103:8080/okHttpServer/fileUpload",//
+                        "mFile",//
+                        file,//
+                        new OkHttpClientManager.Param[]{
+                                new OkHttpClientManager.Param("username", "zhy"),
+                                new OkHttpClientManager.Param("password", "123")},//
+                        new MyResultCallback<String>()
+                        {
+                            @Override
+                            public void onError(Request request, Exception e)
+                            {
+                                e.printStackTrace();
+                            }
 
-                    @Override
-                    public void onResponse(String filePath)
-                    {
-                        Log.e("TAG", filePath);
-                    }
-                }
-        );
+                            @Override
+                            public void onResponse(String filePath)
+                            {
+                                Log.e("TAG", filePath);
+                            }
+                        }, this
+                );
     }
 
 
@@ -212,8 +212,20 @@ public class MainActivity extends AppCompatActivity
                     {
                         Toast.makeText(MainActivity.this, response + "下载成功", Toast.LENGTH_SHORT).show();
                     }
+
+                    @Override
+                    public void onAfter()
+                    {
+                        super.onAfter();
+                        mTv.setText("success");
+                    }
                 });
     }
 
-
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        OkHttpClientManager.cancelTag(this);
+    }
 }

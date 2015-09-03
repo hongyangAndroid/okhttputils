@@ -1,6 +1,8 @@
 # okhttp-utils
 okhttp的辅助类
 
+[toc]
+
 ## 用法
 
 * Android Studio
@@ -34,6 +36,7 @@ sample项目的代码也上传了，大家可以下载参考里面的依赖，�
 * 支持请求回调，直接返回对象、对象集合
 * 支持session的保持
 * 支持自签名网站https的访问，提供方法设置下证书就行
+* 支持取消某个请求
 
 
 ##用法示例
@@ -183,6 +186,7 @@ OkHttpClientManager.getUploadDelegate().postAsyn("http://192.168.1.103:8080/okHt
 ```xml
 
 OkHttpClientManager.getInstance()
+		.getHttpsDelegate()
        .setCertificates(inputstream);
 ```
 
@@ -203,6 +207,7 @@ public class MyApplication extends Application
         try
         {
             OkHttpClientManager.getInstance()
+            			.getHttpsDelegate()
                     .setCertificates(getAssets().open("aaa.cer"),
                             getAssets().open("server.cer"));
         } catch (IOException e)
@@ -224,13 +229,13 @@ OkHttpClientManager.getAsyn("http://192.168.56.1:8080/okHttpServer/user!getUser"
 new OkHttpClientManager.ResultCallback<User>()
 {
 	@Override
-    public void onBefore(Request request, Exception e)
+    public void onBefore(Request request)
     {
         showWaitingDialog();
     }
     
     @Override
-    public void onAfter(Request request, Exception e)
+    public void onAfter()
     {
         dismissWaitingDialog();
     }
@@ -275,6 +280,43 @@ public abstract class MyResultCallback<T> extends ResultCallback<T>
 
 ```
 
+### 如何取消某个请求
+
+目前对于支持的方法都添加了最后一个参数`Object tag`，取消则通过` OkHttpClientManager.cancelTag(tag)`执行。
+
+例如：在Activity中，当Activity销毁取消某个请求：
+
+```java
+OkHttpClientManager.getAsyn("http://www.csdn.net/", new MyResultCallback<String>()
+        {
+            @Override
+            public void onError(Request request, Exception e)
+            {
+                Log.e("TAG", "onError" + e.getMessage());
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(String u)
+            {
+                Log.e("TAG", "onResponse" + MainActivity.this);
+                mTv.setText(u);
+            }
+        }, this);//注意这里将Activity.this作为tag
+        
+```
+Activity的onDestory中
+
+```java
+@Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        OkHttpClientManager.cancelTag(this);//取消以Activity.this作为tag的请求
+    }
+```
+
+
 ### 说明
 
 目前比较常见的API可以直接通过OkHttpClientManager.methodName访问，当然有很多不常用的方法，会被封装在对应的模块内部，大体分为以下几个模块：
@@ -299,6 +341,39 @@ OkHttpClientManager.getDisplayImageDelegate().displayImage();
 ```java
 OkHttpClientManager.getPostDelegate().post(url,file,callback);
 ```
+
+### 没有提供的方法？
+
+对于get、post方式的方法，如果工具类中没有提供，那么可以通过如下方式：
+
+#### Get
+
+```java
+//同步
+OkHttpClientManager.getHttpDelegate().get(request);
+//异步
+OkHttpClientManager.getHttpDelegate().getAsyn(request, callback);
+
+```
+
+#### Post
+
+```java
+//同步
+OkHttpClientManager.getPostDelegate().post(request);
+//异步
+OkHttpClientManager.getPostDelegate().postAsyn(request, callback);
+
+```
+
+自己去构造Request.
+
+如果还不能满足你的需求，那么只好整个过程都自己去书写了，但是你肯定不希望项目有中出现两个`OkHttpClient`对象，那么对于`OkHttpClient`对象你可以通过
+
+```java
+OkHttpClient client = OkHttpClientManager.getClient();
+```
+进行获取。
 
 
 
