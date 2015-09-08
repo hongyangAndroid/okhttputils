@@ -493,7 +493,7 @@ public class OkHttpClientManager
          */
         public Response post(String url, String bodyStr) throws IOException
         {
-            return post(url, bodyStr);
+            return post(url, bodyStr,null);
         }
 
         public Response post(String url, String bodyStr, Object tag) throws IOException
@@ -509,7 +509,7 @@ public class OkHttpClientManager
          */
         public Response post(String url, File bodyFile) throws IOException
         {
-            return post(url, bodyFile);
+            return post(url, bodyFile,null);
         }
 
         public Response post(String url, File bodyFile, Object tag) throws IOException
@@ -525,7 +525,7 @@ public class OkHttpClientManager
          */
         public Response post(String url, byte[] bodyBytes) throws IOException
         {
-            return post(url, bodyBytes);
+            return post(url, bodyBytes,null);
         }
 
         public Response post(String url, byte[] bodyBytes, Object tag) throws IOException
@@ -541,7 +541,7 @@ public class OkHttpClientManager
          */
         public void postAsyn(String url, String bodyStr, final ResultCallback callback)
         {
-            postAsyn(url, bodyStr, callback);
+            postAsyn(url, bodyStr, callback,null);
         }
 
         public void postAsyn(String url, String bodyStr, final ResultCallback callback, Object tag)
@@ -661,7 +661,7 @@ public class OkHttpClientManager
          */
         public Response get(String url) throws IOException
         {
-            return get(url);
+            return get(url,null);
         }
 
         public Response get(String url, Object tag) throws IOException
@@ -676,7 +676,7 @@ public class OkHttpClientManager
          */
         public String getAsString(String url) throws IOException
         {
-            return getAsString(url);
+            return getAsString(url,null);
         }
 
         public String getAsString(String url, Object tag) throws IOException
@@ -698,7 +698,7 @@ public class OkHttpClientManager
          */
         public void getAsyn(String url, final ResultCallback callback)
         {
-            getAsyn(url, callback);
+            getAsyn(url, callback,null);
         }
 
         public void getAsyn(String url, final ResultCallback callback, Object tag)
