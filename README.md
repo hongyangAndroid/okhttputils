@@ -328,7 +328,7 @@ Activity的onDestory中
 * UploadDelegate
 * PostDelegate
 
-如果你有比较特殊的需求，不放通过OkHttpClientManager.getXXXDelegate().methodName去访问。
+如果你有比较特殊的需求，不妨通过OkHttpClientManager.getXXXDelegate().methodName去访问。
 
 比如加载图片：
 
