@@ -1,0 +1,13 @@
+<manifest package="com.zhy.http.okhttp"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+
+    <application android:allowBackup="true"
+                 android:label="@string/app_name"
+        >
+
+    </application>
+
+</manifest>

@@ -9,7 +9,7 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context=".MainActivity">
 
-    <com.imooc.sample_okhttp.FlowLayout
+    <com.zhy.sample_okhttp.FlowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
@@ -57,11 +57,22 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="multiFileUpload"
+            android:text="Multi Upload Files"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="downloadFile"
             android:text="Download File"/>
 
-    </com.imooc.sample_okhttp.FlowLayout>
+    </com.zhy.sample_okhttp.FlowLayout>
 
+    <ProgressBar
+        android:id="@+id/id_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/id_textview"
