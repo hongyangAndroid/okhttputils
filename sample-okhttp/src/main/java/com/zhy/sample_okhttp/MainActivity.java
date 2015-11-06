@@ -84,21 +84,23 @@ public class MainActivity extends AppCompatActivity
     {
 
         final String url = "https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson";
-        new OkHttpRequest.Builder().url(url).get(new MyResultCallback<User>()
-        {
-            @Override
-            public void onError(Request request, Exception e)
-            {
-                Log.e("TAG", "onError , e = " + e.getMessage());
-            }
+        new OkHttpRequest.Builder()
+                .url(url)
+                .get(new MyResultCallback<User>()
+                {
+                    @Override
+                    public void onError(Request request, Exception e)
+                    {
+                        Log.e("TAG", "onError , e = " + e.getMessage());
+                    }
 
-            @Override
-            public void onResponse(User response)
-            {
-                Log.e("TAG", "onResponse , user = " + response);
-                mTv.setText(response.username);
-            }
-        });
+                    @Override
+                    public void onResponse(User response)
+                    {
+                        Log.e("TAG", "onResponse , user = " + response);
+                        mTv.setText(response.username);
+                    }
+                });
 
         new Thread()
         {
