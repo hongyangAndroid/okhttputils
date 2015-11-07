@@ -12,6 +12,11 @@
 	```
 	compile project(':okhttputils')
 	```
+	主项目中无需再引用okhttp的依赖，也不需要再额外导入Gson的lib.
+	
+* Eclipse
+	
+	下载[okhttputils.jar](okhttputils.jar)，添加到项目libs，同时需要下载[okhttp.jar](https://search.maven.org/remote_content?g=com.squareup.okhttp&a=mockwebserver&v=LATEST)和[gson-2.2.1.jar](gson-2.2.1.jar)
 
 
 **注意**

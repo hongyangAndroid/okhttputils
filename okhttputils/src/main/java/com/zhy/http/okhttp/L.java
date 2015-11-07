@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class L
 {
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     public static void e(String msg)
     {
