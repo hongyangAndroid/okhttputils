@@ -79,7 +79,7 @@ public class OkHttpDownloadRequest extends OkHttpGetRequest
         return (T) saveFile(response, null);
     }
 
-    public String saveFile(Response response, ResultCallback callback) throws IOException
+    public String saveFile(Response response, final ResultCallback callback) throws IOException
     {
         InputStream is = null;
         byte[] buf = new byte[2048];
@@ -88,7 +88,7 @@ public class OkHttpDownloadRequest extends OkHttpGetRequest
         try
         {
             is = response.body().byteStream();
-            long total = response.body().contentLength();
+            final long total = response.body().contentLength();
             long sum = 0;
 
             L.e(total + "");
@@ -104,9 +104,20 @@ public class OkHttpDownloadRequest extends OkHttpGetRequest
             {
                 sum += len;
                 fos.write(buf, 0, len);
+
                 if (callback != null)
-                    callback.inProgress(sum * 1.0f / total);
-                L.e("" + (sum * 1.0f / total));
+                {
+                    final long finalSum = sum;
+                    mOkHttpClientManager.getDelivery().post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+
+                            callback.inProgress(finalSum * 1.0f / total);
+                        }
+                    });
+                }
             }
             fos.flush();
 

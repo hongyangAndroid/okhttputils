@@ -6,7 +6,6 @@ import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.zhy.http.okhttp.L;
 import com.zhy.http.okhttp.callback.ResultCallback;
 
 import java.io.File;
@@ -114,10 +113,18 @@ public class OkHttpPostRequest extends OkHttpRequest
         CountingRequestBody countingRequestBody = new CountingRequestBody(requestBody, new CountingRequestBody.Listener()
         {
             @Override
-            public void onRequestProgress(long bytesWritten, long contentLength)
+            public void onRequestProgress(final long bytesWritten, final long contentLength)
             {
-                L.e("" + (bytesWritten * 1.0f / contentLength));
-                callback.inProgress(bytesWritten * 1.0f / contentLength);
+
+                mOkHttpClientManager.getDelivery().post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        callback.inProgress(bytesWritten * 1.0f / contentLength);
+                    }
+                });
+
             }
         });
         return countingRequestBody;
