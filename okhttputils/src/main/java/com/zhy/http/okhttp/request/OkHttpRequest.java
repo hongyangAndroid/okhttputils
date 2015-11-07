@@ -13,6 +13,7 @@ import com.zhy.http.okhttp.callback.ResultCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
@@ -112,6 +113,11 @@ public abstract class OkHttpRequest
         private ImageView imageView;
         private int errorResId = -1;
 
+        //for post
+        private String content;
+        private byte[] bytes;
+        private File file;
+
         public Builder url(String url)
         {
             this.url = url;
@@ -130,11 +136,32 @@ public abstract class OkHttpRequest
             return this;
         }
 
+        public Builder addParams(String key, String val)
+        {
+            if (this.params == null)
+            {
+                params = new IdentityHashMap<>();
+            }
+            params.put(key, val);
+            return this;
+        }
+
         public Builder headers(Map<String, String> headers)
         {
             this.headers = headers;
             return this;
         }
+
+        public Builder addHeader(String key, String val)
+        {
+            if (this.headers == null)
+            {
+                headers = new IdentityHashMap<>();
+            }
+            headers.put(key, val);
+            return this;
+        }
+
 
         public Builder files(Pair<String, File>... files)
         {
@@ -167,6 +194,11 @@ public abstract class OkHttpRequest
             return this;
         }
 
+        public Builder content(String content)
+        {
+            this.content = content;
+            return this;
+        }
 
         public <T> T get(Class<T> clazz) throws IOException
         {
@@ -183,13 +215,13 @@ public abstract class OkHttpRequest
 
         public <T> T post(Class<T> clazz) throws IOException
         {
-            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers);
+            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers, content, bytes, file);
             return request.invoke(clazz);
         }
 
         public OkHttpRequest post(ResultCallback callback)
         {
-            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers);
+            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers, content, bytes, file);
             request.invokeAsyn(callback);
             return request;
         }

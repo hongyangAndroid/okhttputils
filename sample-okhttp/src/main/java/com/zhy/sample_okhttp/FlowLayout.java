@@ -15,7 +15,6 @@ public class FlowLayout extends ViewGroup
 	{
 		super(context, attrs, defStyle);
 		//
-
 	}
 
 	public FlowLayout(Context context, AttributeSet attrs)

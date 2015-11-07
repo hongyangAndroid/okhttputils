@@ -22,7 +22,7 @@ public class OkHttpUploadRequest extends OkHttpPostRequest
 
     protected OkHttpUploadRequest(String url, String tag, Map<String, String> params, Map<String, String> headers, Pair<String, File>[] files)
     {
-        super(url, tag, params, headers);
+        super(url, tag, params, headers, null, null, null);
         this.files = files;
     }
 
