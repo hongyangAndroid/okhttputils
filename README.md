@@ -16,7 +16,7 @@
 	
 * Eclipse
 	
-	下载[okhttputils.jar](okhttputils.jar)，添加到项目libs，同时需要下载[okhttp.jar](https://search.maven.org/remote_content?g=com.squareup.okhttp&a=mockwebserver&v=LATEST)和[gson-2.2.1.jar](gson-2.2.1.jar)
+	下载[okhttputils.jar](okhttputils.jar)，添加到项目libs，同时需要下载[okhttp.jar](https://search.maven.org/remote_content?g=com.squareup.okhttp&a=okhttp&v=LATEST)和[gson-2.2.1.jar](gson-2.2.1.jar)
 
 
 **注意**
