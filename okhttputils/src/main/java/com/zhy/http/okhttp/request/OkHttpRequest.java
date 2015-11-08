@@ -21,9 +21,7 @@ import java.util.Map;
  */
 public abstract class OkHttpRequest
 {
-
     protected OkHttpClientManager mOkHttpClientManager = OkHttpClientManager.getInstance();
-
     protected OkHttpClient mOkHttpClient;
 
     protected RequestBody requestBody;
@@ -70,6 +68,7 @@ public abstract class OkHttpRequest
 
     public <T> T invoke(Class<T> clazz) throws IOException
     {
+        requestBody = buildRequestBody();
         Request request = buildRequest();
         return mOkHttpClientManager.execute(request, clazz);
     }

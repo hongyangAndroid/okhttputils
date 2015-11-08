@@ -105,6 +105,7 @@ public class OkHttpClientManager
             @Override
             public void onFailure(final Request request, final IOException e)
             {
+                //TODO when cancel , should do?
                 sendFailResultCallback(request, e, resCallBack);
             }
 
