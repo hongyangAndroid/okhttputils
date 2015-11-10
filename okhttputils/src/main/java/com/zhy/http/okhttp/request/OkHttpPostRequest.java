@@ -40,7 +40,7 @@ public class OkHttpPostRequest extends OkHttpRequest
 
     }
 
-    private void validParams()
+    protected void validParams()
     {
         int count = 0;
         if (params != null && !params.isEmpty())

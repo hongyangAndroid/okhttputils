@@ -26,6 +26,15 @@ public class OkHttpUploadRequest extends OkHttpPostRequest
         this.files = files;
     }
 
+    @Override
+    protected void validParams()
+    {
+        if (params == null && files == null)
+        {
+            throw new IllegalArgumentException("params and files can't both null in upload request .");
+        }
+    }
+
     private void addParams(MultipartBuilder builder, Map<String, String> params)
     {
         if (builder == null)
