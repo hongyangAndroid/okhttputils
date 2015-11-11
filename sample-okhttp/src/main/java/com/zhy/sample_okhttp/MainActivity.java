@@ -16,7 +16,6 @@ import com.zhy.http.okhttp.callback.ResultCallback;
 import com.zhy.http.okhttp.request.OkHttpRequest;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +82,8 @@ public class MainActivity extends AppCompatActivity
     public void getUser(View view)
     {
 
-        final String url = "https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson";
+        String url = "https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson";
+//        url = "http://192.168.56.1:8080/test/user.do?action=login&username=fusheng&password=123";
         new OkHttpRequest.Builder()
                 .url(url)
                 .get(new MyResultCallback<User>()
@@ -102,22 +102,22 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        new Thread()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    User u = new OkHttpRequest.Builder().url(url).get(User.class);
-                    Log.e("TAG", "syn u = " + u);
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }.start();
+//        new Thread()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                try
+//                {
+//                    User u = new OkHttpRequest.Builder().url(url).get(User.class);
+//                    Log.e("TAG", "syn u = " + u);
+//                } catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }.start();
 
 
     }
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity
         headers.put("APP-Key", "APP-Secret222");
         headers.put("APP-Secret", "APP-Secret111");
 
-        String url = "http://192.168.1.103:8080/okHttpServer/fileUpload";
+        String url = "http://192.168.56.1:8080/okHttpServer/fileUpload";
         new OkHttpRequest.Builder()//
                 .url(url)//
                 .params(params)

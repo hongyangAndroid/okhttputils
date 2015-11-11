@@ -1,9 +1,11 @@
 package com.zhy.http.okhttp;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -13,6 +15,7 @@ import com.zhy.http.okhttp.callback.ResultCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Modifier;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.security.KeyManagementException;
@@ -51,7 +54,21 @@ public class OkHttpClientManager
         //cookie enabled
         mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
         mDelivery = new Handler(Looper.getMainLooper());
-        mGson = new Gson();
+
+        final int sdk = Build.VERSION.SDK_INT;
+        if (sdk >= 23)
+        {
+            GsonBuilder gsonBuilder = new GsonBuilder()
+                    .excludeFieldsWithModifiers(
+                            Modifier.FINAL,
+                            Modifier.TRANSIENT,
+                            Modifier.STATIC);
+            mGson = gsonBuilder.create();
+        } else
+        {
+            mGson = new Gson();
+        }
+
         //just for test
         if (false)
         {
@@ -95,7 +112,7 @@ public class OkHttpClientManager
     }
 
 
-    public void execute(Request request, ResultCallback callback)
+    public void execute(final Request request, ResultCallback callback)
     {
         if (callback == null) callback = ResultCallback.DEFAULT_RESULT_CALLBACK;
         final ResultCallback resCallBack = callback;
@@ -112,6 +129,18 @@ public class OkHttpClientManager
             @Override
             public void onResponse(final Response response)
             {
+                if (response.code() >= 400 && response.code() <= 599)
+                {
+                    try
+                    {
+                        sendFailResultCallback(request, new RuntimeException(response.body().string()), resCallBack);
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+
                 try
                 {
                     final String string = response.body().string();
@@ -140,7 +169,7 @@ public class OkHttpClientManager
         Call call = mOkHttpClient.newCall(request);
         Response execute = call.execute();
         String respStr = execute.body().string();
-        return new Gson().fromJson(respStr, clazz);
+        return mGson.fromJson(respStr, clazz);
     }
 
 
