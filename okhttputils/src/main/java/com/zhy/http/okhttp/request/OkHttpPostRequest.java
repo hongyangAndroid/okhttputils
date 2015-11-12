@@ -36,8 +36,6 @@ public class OkHttpPostRequest extends OkHttpRequest
         this.content = content;
         this.bytes = bytes;
         this.file = file;
-        validParams();
-
     }
 
     protected void validParams()
@@ -86,6 +84,7 @@ public class OkHttpPostRequest extends OkHttpRequest
     @Override
     protected RequestBody buildRequestBody()
     {
+        validParams();
         RequestBody requestBody = null;
         switch (type)
         {
