@@ -5,6 +5,7 @@ import android.util.Pair;
 import android.widget.ImageView;
 
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
@@ -105,6 +106,7 @@ public abstract class OkHttpRequest
         private Map<String, String> headers;
         private Map<String, String> params;
         private Pair<String, File>[] files;
+        private MediaType mediaType;
 
         private String destFileDir;
         private String destFileName;
@@ -199,6 +201,12 @@ public abstract class OkHttpRequest
             return this;
         }
 
+        public Builder mediaType(MediaType mediaType)
+        {
+            this.mediaType = mediaType;
+            return this;
+        }
+
         public <T> T get(Class<T> clazz) throws IOException
         {
             OkHttpRequest request = new OkHttpGetRequest(url, tag, params, headers);
@@ -214,13 +222,13 @@ public abstract class OkHttpRequest
 
         public <T> T post(Class<T> clazz) throws IOException
         {
-            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers, content, bytes, file);
+            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers, mediaType, content, bytes, file);
             return request.invoke(clazz);
         }
 
         public OkHttpRequest post(ResultCallback callback)
         {
-            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers, content, bytes, file);
+            OkHttpRequest request = new OkHttpPostRequest(url, tag, params, headers, mediaType, content, bytes, file);
             request.invokeAsyn(callback);
             return request;
         }

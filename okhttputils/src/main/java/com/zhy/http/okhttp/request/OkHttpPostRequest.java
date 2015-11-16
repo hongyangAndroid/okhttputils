@@ -19,6 +19,7 @@ public class OkHttpPostRequest extends OkHttpRequest
     private String content;
     private byte[] bytes;
     private File file;
+    private MediaType mediaType;
 
     private int type = 0;
     private static final int TYPE_PARAMS = 1;
@@ -30,9 +31,10 @@ public class OkHttpPostRequest extends OkHttpRequest
     private final MediaType MEDIA_TYPE_STRING = MediaType.parse("text/plain;charset=utf-8");
 
 
-    protected OkHttpPostRequest(String url, String tag, Map<String, String> params, Map<String, String> headers, String content, byte[] bytes, File file)
+    protected OkHttpPostRequest(String url, String tag, Map<String, String> params, Map<String, String> headers, MediaType mediaType, String content, byte[] bytes, File file)
     {
         super(url, tag, params, headers);
+        this.mediaType = mediaType;
         this.content = content;
         this.bytes = bytes;
         this.file = file;
@@ -86,6 +88,8 @@ public class OkHttpPostRequest extends OkHttpRequest
     {
         validParams();
         RequestBody requestBody = null;
+
+
         switch (type)
         {
             case TYPE_PARAMS:
@@ -94,13 +98,13 @@ public class OkHttpPostRequest extends OkHttpRequest
                 requestBody = builder.build();
                 break;
             case TYPE_BYTES:
-                requestBody = RequestBody.create(MEDIA_TYPE_STREAM, bytes);
+                requestBody = RequestBody.create(mediaType != null ? mediaType : MEDIA_TYPE_STREAM, bytes);
                 break;
             case TYPE_FILE:
-                requestBody = RequestBody.create(MEDIA_TYPE_STREAM, file);
+                requestBody = RequestBody.create(mediaType != null ? mediaType : MEDIA_TYPE_STREAM, file);
                 break;
             case TYPE_STRING:
-                requestBody = RequestBody.create(MEDIA_TYPE_STRING, content);
+                requestBody = RequestBody.create(mediaType != null ? mediaType : MEDIA_TYPE_STRING, content);
                 break;
         }
         return requestBody;

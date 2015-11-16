@@ -1,6 +1,5 @@
 package com.zhy.http.okhttp.request;
 
-import android.util.Log;
 import android.util.Pair;
 
 import com.squareup.okhttp.Headers;
@@ -23,7 +22,7 @@ public class OkHttpUploadRequest extends OkHttpPostRequest
 
     protected OkHttpUploadRequest(String url, String tag, Map<String, String> params, Map<String, String> headers, Pair<String, File>[] files)
     {
-        super(url, tag, params, headers, null, null, null);
+        super(url, tag, params, headers, null, null, null, null);
         this.files = files;
     }
 
