@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class OkHttpGetRequest extends OkHttpRequest
 {
-    protected OkHttpGetRequest(String url, String tag, Map<String, String> params, Map<String, String> headers)
+    protected OkHttpGetRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers)
     {
         super(url, tag, params, headers);
     }

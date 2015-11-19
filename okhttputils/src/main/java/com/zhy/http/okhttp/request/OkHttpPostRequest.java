@@ -31,7 +31,7 @@ public class OkHttpPostRequest extends OkHttpRequest
     private final MediaType MEDIA_TYPE_STRING = MediaType.parse("text/plain;charset=utf-8");
 
 
-    protected OkHttpPostRequest(String url, String tag, Map<String, String> params, Map<String, String> headers, MediaType mediaType, String content, byte[] bytes, File file)
+    protected OkHttpPostRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, MediaType mediaType, String content, byte[] bytes, File file)
     {
         super(url, tag, params, headers);
         this.mediaType = mediaType;

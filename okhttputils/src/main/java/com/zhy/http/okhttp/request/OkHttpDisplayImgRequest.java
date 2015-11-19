@@ -24,7 +24,7 @@ public class OkHttpDisplayImgRequest extends OkHttpGetRequest
     private int errorResId;
 
     protected OkHttpDisplayImgRequest(
-            String url, String tag, Map<String,
+            String url, Object tag, Map<String,
             String> params, Map<String, String> headers,
             ImageView imageView, int errorResId)
     {

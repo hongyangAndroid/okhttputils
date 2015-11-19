@@ -24,7 +24,7 @@ public class OkHttpDownloadRequest extends OkHttpGetRequest
 
 
     protected OkHttpDownloadRequest(
-            String url, String tag, Map<String,
+            String url, Object tag, Map<String,
             String> params, Map<String, String> headers,
             String destFileName, String destFileDir)
     {
