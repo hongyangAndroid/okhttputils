@@ -17,7 +17,7 @@
 	或者
 	
 	```
-	
+	compile 'com.zhy:okhttputils:1.0.2'
 	```
 	
 * Eclipse
