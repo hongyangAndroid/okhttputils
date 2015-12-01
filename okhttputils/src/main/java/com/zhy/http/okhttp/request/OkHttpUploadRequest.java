@@ -6,8 +6,10 @@ import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
+import com.zhy.http.okhttp.RequestBodyUtils;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.Map;
@@ -19,19 +21,22 @@ public class OkHttpUploadRequest extends OkHttpPostRequest
 {
     private Pair<String, File>[] files;
 
+    private Pair<String, InputStream>[] inputStreams;
 
-    protected OkHttpUploadRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, Pair<String, File>[] files)
+
+    protected OkHttpUploadRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, Pair<String, File>[] files, Pair<String, InputStream>[] inputStreams)
     {
         super(url, tag, params, headers, null, null, null, null);
         this.files = files;
+        this.inputStreams = inputStreams;
     }
 
     @Override
     protected void validParams()
     {
-        if (params == null && files == null)
+        if (params == null && files == null && inputStreams == null)
         {
-            throw new IllegalArgumentException("params and files can't both null in upload request .");
+            throw new IllegalArgumentException("params and files or inputStreams can't both null in upload request .");
         }
     }
 
@@ -75,6 +80,10 @@ public class OkHttpUploadRequest extends OkHttpPostRequest
                         fileBody);
             }
         }
+        if(inputStreams != null)
+        {
+            addInputStreamsPart(builder, inputStreams);
+        }
 
         return builder.build();
     }
@@ -89,6 +98,21 @@ public class OkHttpUploadRequest extends OkHttpPostRequest
             contentTypeFor = "application/octet-stream";
         }
         return contentTypeFor;
+    }
+
+    private void addInputStreamsPart(MultipartBuilder builder, Pair<String, InputStream>[] inputStreams)
+    {
+        RequestBody inputStreamBody = null;
+        for(int i = 0; i < inputStreams.length; i++)
+        {
+            Pair<String, InputStream> inputStreamPair = inputStreams[i];
+            String keyName = inputStreamPair.first;
+            InputStream inputStream = inputStreamPair.second;
+            inputStreamBody = RequestBodyUtils.create(null, inputStream);
+            builder.addPart(Headers.of("Content-Disposition",
+                            "form-data; name=\"" + keyName + "\""),
+                    inputStreamBody);
+        }
     }
 
 }

@@ -13,6 +13,7 @@ import com.zhy.http.okhttp.callback.ResultCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -105,6 +106,7 @@ public abstract class OkHttpRequest
         private Map<String, String> headers;
         private Map<String, String> params;
         private Pair<String, File>[] files;
+        private Pair<String, InputStream>[] inputStreams;
         private MediaType mediaType;
 
         private String destFileDir;
@@ -159,6 +161,12 @@ public abstract class OkHttpRequest
                 headers = new IdentityHashMap<>();
             }
             headers.put(key, val);
+            return this;
+        }
+
+        public Builder inputStreams(Pair<String, InputStream>... inputStreams)
+        {
+            this.inputStreams = inputStreams;
             return this;
         }
 
@@ -234,14 +242,14 @@ public abstract class OkHttpRequest
 
         public OkHttpRequest upload(ResultCallback callback)
         {
-            OkHttpRequest request = new OkHttpUploadRequest(url, tag, params, headers, files);
+            OkHttpRequest request = new OkHttpUploadRequest(url, tag, params, headers, files, inputStreams);
             request.invokeAsyn(callback);
             return request;
         }
 
         public <T> T upload(Class<T> clazz) throws IOException
         {
-            OkHttpRequest request = new OkHttpUploadRequest(url, tag, params, headers, files);
+            OkHttpRequest request = new OkHttpUploadRequest(url, tag, params, headers, files, inputStreams);
             return request.invoke(clazz);
         }
 
