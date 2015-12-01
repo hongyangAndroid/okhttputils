@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 version = "1.0.2"
@@ -30,37 +29,7 @@ def siteUrl = 'https://github.com/hongyangAndroid/okhttp-utils'                 
 def gitUrl = 'https://github.com/hongyangAndroid/okhttp-utils.git'                     // #CONFIG# // project git
 group = "com.zhy"
 
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-                name 'okhttputils'                                   // #CONFIG# // project title
-                url siteUrl
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'hongyangAndroid'                                           // #CONFIG# // your user id (you can write your nickname)
-                        name 'ZhangHongyang'                                       // #CONFIG# // your user name
-                        email '623565791@qq.com'                               // #CONFIG# // your email
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
+
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs

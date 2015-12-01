@@ -16,6 +16,9 @@ import com.zhy.http.okhttp.callback.ResultCallback;
 import com.zhy.http.okhttp.request.OkHttpRequest;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,17 +131,14 @@ public class MainActivity extends AppCompatActivity
         Map<String, String> params = new HashMap<String, String>();
         params.put("name", "zhy");
         String url = "https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/users.gson";
-        new OkHttpRequest.Builder().url(url).params(params).post(new MyResultCallback<List<User>>()
-        {
+        new OkHttpRequest.Builder().url(url).params(params).post(new MyResultCallback<List<User>>() {
             @Override
-            public void onError(Request request, Exception e)
-            {
+            public void onError(Request request, Exception e) {
                 Log.e("TAG", "onError , e = " + e.getMessage());
             }
 
             @Override
-            public void onResponse(List<User> users)
-            {
+            public void onResponse(List<User> users) {
                 Log.e("TAG", "onResponse , users = " + users);
                 mTv.setText(users.get(0).toString());
             }
@@ -152,17 +152,14 @@ public class MainActivity extends AppCompatActivity
         String url = "https://raw.githubusercontent.com/hongyangAndroid/okhttp-utils/master/user.gson";
 
         new OkHttpRequest.Builder().url(url)
-                .get(new MyResultCallback<String>()
-                {
+                .get(new MyResultCallback<String>() {
                     @Override
-                    public void onError(Request request, Exception e)
-                    {
+                    public void onError(Request request, Exception e) {
                         Log.e("TAG", "onError , e = " + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(String response)
-                    {
+                    public void onResponse(String response) {
                         mTv.setText(response);
                     }
                 });
@@ -175,17 +172,14 @@ public class MainActivity extends AppCompatActivity
         //https://kyfw.12306.cn/otn/
         //https://192.168.187.1:8443/
         String url = "http://www.csdn.net/";
-        new OkHttpRequest.Builder().url(url).get(new MyResultCallback<String>()
-        {
+        new OkHttpRequest.Builder().url(url).get(new MyResultCallback<String>() {
             @Override
-            public void onError(Request request, Exception e)
-            {
+            public void onError(Request request, Exception e) {
                 Log.e("TAG", "onError" + e.getMessage());
             }
 
             @Override
-            public void onResponse(String response)
-            {
+            public void onResponse(String response) {
                 mTv.setText(response);
             }
         });
@@ -194,17 +188,14 @@ public class MainActivity extends AppCompatActivity
     public void getHttpsHtml(View view)
     {
         String url = "https://kyfw.12306.cn/otn/";
-        new OkHttpRequest.Builder().url(url).get(new MyResultCallback<String>()
-        {
+        new OkHttpRequest.Builder().url(url).get(new MyResultCallback<String>() {
             @Override
-            public void onError(Request request, Exception e)
-            {
+            public void onError(Request request, Exception e) {
                 Log.e("TAG", "onError" + e.getMessage());
             }
 
             @Override
-            public void onResponse(String response)
-            {
+            public void onResponse(String response) {
                 mTv.setText(response);
             }
         });
@@ -217,6 +208,48 @@ public class MainActivity extends AppCompatActivity
         new OkHttpRequest.Builder().url(url).imageView(mImageView).displayImage(null);
     }
 
+    public void uploadStream(View view)
+    {
+        File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
+        if (!file.exists())
+        {
+            Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        InputStream io = null;
+        try {
+            io = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(io == null)
+        {
+            Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Map<String, String> params = new HashMap<>();
+        params.put("username", "张鸿洋");
+        params.put("password", "123");
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("APP-Key", "APP-Secret222");
+        headers.put("APP-Secret", "APP-Secret111");
+
+        String url = "http://192.168.56.1:8080/okHttpServer/fileUpload";
+        new OkHttpRequest.Builder()//
+                .url(url)//
+                .params(params)
+                .headers(headers)
+                .files(new Pair<String, File>("mFile", file))//
+                .upload(stringResultCallback);
+
+        new OkHttpRequest.Builder()
+                .url(url)
+                .params(params)
+                .inputStreams(new Pair<String, InputStream>("mInputstream", io))
+                .headers(headers)
+                .upload(stringResultCallback);
+    }
 
     public void uploadFile(View view)
     {
