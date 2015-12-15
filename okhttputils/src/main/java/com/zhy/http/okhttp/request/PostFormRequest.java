@@ -98,14 +98,18 @@ public class PostFormRequest extends OkHttpRequest
 
     private void addParams(MultipartBuilder builder)
     {
+
+
         if (params != null && !params.isEmpty())
         {
             for (String key : params.keySet())
             {
                 builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + key + "\""),
                         RequestBody.create(null, params.get(key)));
-
             }
+        } else
+        {
+            builder.addFormDataPart("1", "1");
         }
     }
 

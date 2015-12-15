@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity
         OkHttpUtils//
                 .post()//
                 .url(url)//
-                .params(params)//
+//                .params(params)//
                 .build()//
                 .execute(new ListUserCallback()//
                 {
@@ -240,7 +240,8 @@ public class MainActivity extends AppCompatActivity
 
         OkHttpUtils.post()//
                 .addFile("mFile", "messenger_01.png", file)//
-                .url(url).params(params)//
+                .url(url)//
+                .params(params)//
                 .headers(headers)//
                 .build()//
                 .execute(new MyStringCallback());
@@ -264,7 +265,8 @@ public class MainActivity extends AppCompatActivity
         OkHttpUtils.post()//
                 .addFile("mFile", "messenger_01.png", file)//
                 .addFile("mFile", "test1.txt", file2)//
-                .url(url).params(params)//
+                .url(url)
+                .params(params)//
                 .build()//
                 .execute(new MyStringCallback());
     }
@@ -279,6 +281,13 @@ public class MainActivity extends AppCompatActivity
                 .build()//
                 .execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(), "gson-2.2.1.jar")//
                 {
+
+                    @Override
+                    public void onBefore(Request request)
+                    {
+                        super.onBefore(request);
+                    }
+
                     @Override
                     public void inProgress(float progress)
                     {
