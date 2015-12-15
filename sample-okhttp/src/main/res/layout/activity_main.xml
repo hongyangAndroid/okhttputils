@@ -12,6 +12,32 @@
     <com.zhy.sample_okhttp.FlowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getHtml"
+            android:text="Get Html"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="postFile"
+            android:text="Post File"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="postString"
+            android:text="Post String"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getHttpsHtml"
+            android:text="Get Https Html"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,24 +49,6 @@
             android:layout_height="wrap_content"
             android:onClick="getUsers"
             android:text="Get Users"/>
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="getSimpleString"
-            android:text="Get SimpleString"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="getHtml"
-            android:text="Get Html"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="getHttpsHtml"
-            android:text="Get Https Html"/>
 
         <Button
             android:layout_width="wrap_content"

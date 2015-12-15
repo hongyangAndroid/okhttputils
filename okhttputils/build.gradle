@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.0.2"
+version = "2.0.0"
 
 android {
     compileSdkVersion 23
@@ -133,5 +133,4 @@ makeJar.dependsOn(clearJar, build)
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile files('libs/gson-2.2.1.jar')
 }

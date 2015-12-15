@@ -54,10 +54,9 @@ public class CountingRequestBody extends RequestBody
     @Override
     public void writeTo(BufferedSink sink) throws IOException
     {
-        BufferedSink bufferedSink;
 
         countingSink = new CountingSink(sink);
-        bufferedSink = Okio.buffer(countingSink);
+        BufferedSink bufferedSink = Okio.buffer(countingSink);
 
         delegate.writeTo(bufferedSink);
 
@@ -87,9 +86,7 @@ public class CountingRequestBody extends RequestBody
 
     public static interface Listener
     {
-
         public void onRequestProgress(long bytesWritten, long contentLength);
-
     }
 
 }

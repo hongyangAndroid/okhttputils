@@ -2,7 +2,7 @@ package com.zhy.sample_okhttp;
 
 import android.app.Application;
 
-import com.zhy.http.okhttp.OkHttpClientManager;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -33,11 +33,11 @@ public class MyApplication extends Application
     public void onCreate()
     {
         super.onCreate();
-        OkHttpClientManager.getInstance().setCertificates(new InputStream[]{
+        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
                 new Buffer()
                         .writeUtf8(CER_12306)
                         .inputStream()});
-        OkHttpClientManager.getInstance().getOkHttpClient().setConnectTimeout(100000, TimeUnit.MILLISECONDS);
+        OkHttpUtils.getInstance().getOkHttpClient().setConnectTimeout(100000, TimeUnit.MILLISECONDS);
 
 
     }
