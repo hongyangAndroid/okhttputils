@@ -9,11 +9,9 @@ import com.squareup.okhttp.RequestBody;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.utils.Exceptions;
 
 import java.net.FileNameMap;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +20,7 @@ import java.util.Map;
  */
 public class PostFormRequest extends OkHttpRequest
 {
-    private List<PostFormBuilder.FileInput> files = new ArrayList<>();
+    private List<PostFormBuilder.FileInput> files;
 
     public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files)
     {
@@ -33,12 +31,11 @@ public class PostFormRequest extends OkHttpRequest
     @Override
     protected RequestBody buildRequestBody()
     {
-        if (files == null)
+        if (files == null || files.isEmpty())
         {
             FormEncodingBuilder builder = new FormEncodingBuilder();
             addParams(builder);
             return builder.build();
-
         } else
         {
             MultipartBuilder builder = new MultipartBuilder()
@@ -98,8 +95,6 @@ public class PostFormRequest extends OkHttpRequest
 
     private void addParams(MultipartBuilder builder)
     {
-
-
         if (params != null && !params.isEmpty())
         {
             for (String key : params.keySet())
@@ -107,17 +102,15 @@ public class PostFormRequest extends OkHttpRequest
                 builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + key + "\""),
                         RequestBody.create(null, params.get(key)));
             }
-        } else
-        {
-            builder.addFormDataPart("1", "1");
         }
     }
 
     private void addParams(FormEncodingBuilder builder)
     {
-        if (params == null || !params.isEmpty())
+        if (params == null || params.isEmpty())
         {
-            Exceptions.illegalArgument("params in PostFormRequest can not be empty.");
+            builder.add("1", "1");
+            return;
         }
 
         for (String key : params.keySet())
