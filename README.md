@@ -343,6 +343,15 @@ public class MyApplication extends Application
 即可。别忘了注册Application。
 
 
+### Debug信息
+
+在Application的onCreate方法中通过debug方法开启
+
+```java
+ OkHttpUtils.getInstance().debug("testDebug");
+```
+
+
 ### 取消单个请求
 
 ```java

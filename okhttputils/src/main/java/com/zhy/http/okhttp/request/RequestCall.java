@@ -101,6 +101,11 @@ public class RequestCall
         return request;
     }
 
+    public OkHttpRequest getOkHttpRequest()
+    {
+        return okHttpRequest;
+    }
+
     public Response execute() throws IOException
     {
         generateCall(null);

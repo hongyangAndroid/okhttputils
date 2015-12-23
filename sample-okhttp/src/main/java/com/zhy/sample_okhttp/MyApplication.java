@@ -37,7 +37,7 @@ public class MyApplication extends Application
                 new Buffer()
                         .writeUtf8(CER_12306)
                         .inputStream()});
-        OkHttpUtils.getInstance().getOkHttpClient().setConnectTimeout(100000, TimeUnit.MILLISECONDS);
+        OkHttpUtils.getInstance().debug("testDebug").getOkHttpClient().setConnectTimeout(100000, TimeUnit.MILLISECONDS);
 
 
     }

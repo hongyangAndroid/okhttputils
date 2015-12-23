@@ -79,5 +79,14 @@ public abstract class OkHttpRequest
         builder.headers(headerBuilder.build());
     }
 
-
+    @Override
+    public String toString()
+    {
+        return "OkHttpRequest{" +
+                "url='" + url + '\'' +
+                ", tag=" + tag +
+                ", params=" + params +
+                ", headers=" + headers +
+                '}';
+    }
 }

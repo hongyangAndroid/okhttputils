@@ -2,6 +2,8 @@ package com.zhy.http.okhttp;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -27,6 +29,7 @@ import javax.net.ssl.SSLSession;
  */
 public class OkHttpUtils
 {
+    public static final String TAG = "OkHttpUtils";
     public static final long DEFAULT_MILLISECONDS = 10000;
     private static OkHttpUtils mInstance;
     private OkHttpClient mOkHttpClient;
@@ -40,7 +43,7 @@ public class OkHttpUtils
         mDelivery = new Handler(Looper.getMainLooper());
 
 
-        if (false)
+        if (true)
         {
             mOkHttpClient.setHostnameVerifier(new HostnameVerifier()
             {
@@ -54,6 +57,17 @@ public class OkHttpUtils
 
 
     }
+
+    private boolean debug;
+    private String tag;
+
+    public OkHttpUtils debug(String tag)
+    {
+        debug = true;
+        this.tag = tag;
+        return this;
+    }
+
 
     public static OkHttpUtils getInstance()
     {
@@ -104,6 +118,15 @@ public class OkHttpUtils
 
     public void execute(final RequestCall requestCall, Callback callback)
     {
+        if (debug)
+        {
+            if(TextUtils.isEmpty(tag))
+            {
+                tag = TAG;
+            }
+            Log.d(tag, "{method:" + requestCall.getRequest().method() + ", detail:" + requestCall.getOkHttpRequest().toString() + "}");
+        }
+
         if (callback == null)
             callback = Callback.CALLBACK_DEFAULT;
         final Callback finalCallback = callback;
