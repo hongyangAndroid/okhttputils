@@ -115,7 +115,10 @@ public class PostFormRequest extends OkHttpRequest
 
         for (String key : params.keySet())
         {
-            builder.add(key, params.get(key));
+            //接口参数可传可不传时
+            if (params.get(key)!=null){
+                builder.add(key, params.get(key));
+            }
         }
     }
 }
