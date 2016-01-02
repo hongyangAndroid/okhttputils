@@ -132,5 +132,5 @@ makeJar.dependsOn(clearJar, build)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
 }

@@ -5,7 +5,7 @@ import com.zhy.http.okhttp.request.RequestCall;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +69,7 @@ public class PostFormBuilder extends OkHttpRequestBuilder
     {
         if (this.params == null)
         {
-            params = new IdentityHashMap<>();
+            params = new LinkedHashMap<>();
         }
         params.put(key, val);
         return this;
@@ -87,7 +87,7 @@ public class PostFormBuilder extends OkHttpRequestBuilder
     {
         if (this.headers == null)
         {
-            headers = new IdentityHashMap<>();
+            headers = new LinkedHashMap<>();
         }
         headers.put(key, val);
         return this;

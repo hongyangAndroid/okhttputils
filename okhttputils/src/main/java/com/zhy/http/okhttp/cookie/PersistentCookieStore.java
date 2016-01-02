@@ -15,10 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <pre>
- *     OkHttpClient client = new OkHttpClient();
- *     client.setCookieHandler(new CookieManager(
- *                new PersistentCookieStore(getApplicationContext()),
- *                   CookiePolicy.ACCEPT_ALL));
+ *     OkHttpClient client = new OkHttpClient.Builder()
+ *             .cookieJar(new JavaNetCookieJar(new CookieManager(
+ *                     new PersistentCookieStore(getApplicationContext()),
+ *                             CookiePolicy.ACCEPT_ALL))
+ *             .build();
  *
  * </pre>
  * <p/>

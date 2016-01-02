@@ -1,7 +1,7 @@
 package com.zhy.sample_okhttp;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.IOException;

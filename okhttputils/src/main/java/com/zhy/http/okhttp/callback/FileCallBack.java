@@ -1,6 +1,6 @@
 package com.zhy.http.okhttp.callback;
 
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.utils.L;
 

@@ -1,9 +1,9 @@
 package com.zhy.http.okhttp.request;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -56,15 +56,15 @@ public class RequestCall
 
         if (readTimeOut > 0 || writeTimeOut > 0 || connTimeOut > 0)
         {
-            cloneClient();
-
             readTimeOut = readTimeOut > 0 ? readTimeOut : OkHttpUtils.DEFAULT_MILLISECONDS;
             writeTimeOut = writeTimeOut > 0 ? writeTimeOut : OkHttpUtils.DEFAULT_MILLISECONDS;
             connTimeOut = connTimeOut > 0 ? connTimeOut : OkHttpUtils.DEFAULT_MILLISECONDS;
 
-            clone.setReadTimeout(readTimeOut, TimeUnit.MILLISECONDS);
-            clone.setWriteTimeout(writeTimeOut, TimeUnit.MILLISECONDS);
-            clone.setConnectTimeout(connTimeOut, TimeUnit.MILLISECONDS);
+            clone = OkHttpUtils.getInstance().getOkHttpClient().newBuilder()
+                    .readTimeout(readTimeOut, TimeUnit.MILLISECONDS)
+                    .writeTimeout(writeTimeOut, TimeUnit.MILLISECONDS)
+                    .connectTimeout(connTimeOut, TimeUnit.MILLISECONDS)
+                    .build();
 
             call = clone.newCall(request);
         } else
@@ -110,12 +110,6 @@ public class RequestCall
     {
         generateCall(null);
         return call.execute();
-    }
-
-
-    private void cloneClient()
-    {
-        clone = OkHttpUtils.getInstance().getOkHttpClient().clone();
     }
 
     public void cancel()
