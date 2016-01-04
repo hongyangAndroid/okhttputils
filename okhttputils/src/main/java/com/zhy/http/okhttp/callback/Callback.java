@@ -1,7 +1,7 @@
 package com.zhy.http.okhttp.callback;
 
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 

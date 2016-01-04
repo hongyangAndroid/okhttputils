@@ -1,7 +1,5 @@
 package com.zhy.http.okhttp.https;
 
-import com.squareup.okhttp.OkHttpClient;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -17,6 +15,7 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -26,7 +25,7 @@ import javax.net.ssl.X509TrustManager;
  */
 public class HttpsUtils
 {
-    public static void setCertificates(OkHttpClient okHttpClient, InputStream[] certificates, InputStream bksFile, String password)
+    public static SSLSocketFactory getSslSocketFactory(InputStream[] certificates, InputStream bksFile, String password)
     {
         try
         {
@@ -35,16 +34,16 @@ public class HttpsUtils
             SSLContext sslContext = SSLContext.getInstance("TLS");
 
             sslContext.init(keyManagers, new TrustManager[]{new MyTrustManager(chooseTrustManager(trustManagers))}, new SecureRandom());
-            okHttpClient.setSslSocketFactory(sslContext.getSocketFactory());
+            return sslContext.getSocketFactory();
         } catch (NoSuchAlgorithmException e)
         {
-            e.printStackTrace();
+            throw new AssertionError(e);
         } catch (KeyManagementException e)
         {
-            e.printStackTrace();
+            throw new AssertionError(e);
         } catch (KeyStoreException e)
         {
-            e.printStackTrace();
+            throw new AssertionError(e);
         }
     }
 

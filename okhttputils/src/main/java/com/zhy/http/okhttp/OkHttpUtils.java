@@ -5,9 +5,11 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import com.zhy.http.okhttp.cookie.SimpleCookieJar;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.PostFileBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -18,8 +20,7 @@ import com.zhy.http.okhttp.request.RequestCall;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -37,15 +38,15 @@ public class OkHttpUtils
 
     private OkHttpUtils()
     {
-        mOkHttpClient = new OkHttpClient();
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         //cookie enabled
-        mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+        okHttpClientBuilder.cookieJar(new SimpleCookieJar());
         mDelivery = new Handler(Looper.getMainLooper());
 
 
         if (true)
         {
-            mOkHttpClient.setHostnameVerifier(new HostnameVerifier()
+            okHttpClientBuilder.hostnameVerifier(new HostnameVerifier()
             {
                 @Override
                 public boolean verify(String hostname, SSLSession session)
@@ -55,7 +56,7 @@ public class OkHttpUtils
             });
         }
 
-
+        mOkHttpClient = okHttpClientBuilder.build();
     }
 
     private boolean debug;
@@ -131,7 +132,7 @@ public class OkHttpUtils
             callback = Callback.CALLBACK_DEFAULT;
         final Callback finalCallback = callback;
 
-        requestCall.getCall().enqueue(new com.squareup.okhttp.Callback()
+        requestCall.getCall().enqueue(new okhttp3.Callback()
         {
             @Override
             public void onFailure(final Request request, final IOException e)
@@ -199,15 +200,36 @@ public class OkHttpUtils
 
     public void cancelTag(Object tag)
     {
-        mOkHttpClient.cancel(tag);
+        for (Call call : mOkHttpClient.dispatcher().queuedCalls())
+        {
+            if (tag.equals(call.request().tag()))
+            {
+                call.cancel();
+            }
+        }
+        for (Call call : mOkHttpClient.dispatcher().runningCalls())
+        {
+            if (tag.equals(call.request().tag()))
+            {
+                call.cancel();
+            }
+        }
     }
 
 
     public void setCertificates(InputStream... certificates)
     {
-        HttpsUtils.setCertificates(getOkHttpClient(), certificates, null, null);
+        mOkHttpClient = getOkHttpClient().newBuilder()
+                .sslSocketFactory(HttpsUtils.getSslSocketFactory(certificates, null, null))
+                .build();
     }
 
 
+    public void setConnectTimeout(int timeout, TimeUnit units)
+    {
+        mOkHttpClient = getOkHttpClient().newBuilder()
+                .connectTimeout(timeout, units)
+                .build();
+    }
 }
 

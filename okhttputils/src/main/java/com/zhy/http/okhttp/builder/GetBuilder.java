@@ -3,7 +3,7 @@ package com.zhy.http.okhttp.builder;
 import com.zhy.http.okhttp.request.GetRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
-import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -64,7 +64,7 @@ public class GetBuilder extends OkHttpRequestBuilder
     {
         if (this.params == null)
         {
-            params = new IdentityHashMap<>();
+            params = new LinkedHashMap<>();
         }
         params.put(key, val);
         return this;
@@ -82,7 +82,7 @@ public class GetBuilder extends OkHttpRequestBuilder
     {
         if (this.headers == null)
         {
-            headers = new IdentityHashMap<>();
+            headers = new LinkedHashMap<>();
         }
         headers.put(key, val);
         return this;
