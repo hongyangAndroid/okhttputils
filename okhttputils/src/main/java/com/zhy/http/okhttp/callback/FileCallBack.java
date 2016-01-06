@@ -33,7 +33,7 @@ public abstract class FileCallBack extends Callback<File>
 
 
     @Override
-    public File parseNetworkResponse(Response response) throws IOException
+    public File parseNetworkResponse(Response response) throws Exception
     {
         return saveFile(response);
     }

@@ -3,8 +3,6 @@ package com.zhy.http.okhttp.callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import java.io.IOException;
-
 public abstract class Callback<T>
 {
     /**
@@ -39,7 +37,7 @@ public abstract class Callback<T>
      *
      * @param response
      */
-    public abstract T parseNetworkResponse(Response response) throws IOException;
+    public abstract T parseNetworkResponse(Response response) throws Exception;
 
     public abstract void onError(Request request, Exception e);
 
@@ -50,7 +48,7 @@ public abstract class Callback<T>
     {
 
         @Override
-        public Object parseNetworkResponse(Response response) throws IOException
+        public Object parseNetworkResponse(Response response) throws Exception
         {
             return null;
         }

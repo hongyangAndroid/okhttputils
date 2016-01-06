@@ -158,7 +158,7 @@ public class OkHttpUtils
                 {
                     Object o = finalCallback.parseNetworkResponse(response);
                     sendSuccessResultCallback(o, finalCallback);
-                } catch (IOException e)
+                } catch (Exception e)
                 {
                     sendFailResultCallback(response.request(), e, finalCallback);
                 }
