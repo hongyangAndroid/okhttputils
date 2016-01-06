@@ -1,11 +1,12 @@
 package com.zhy.http.okhttp.request;
 
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import com.zhy.http.okhttp.utils.Exceptions;
 
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/12/14.
@@ -45,6 +46,12 @@ public class PostStringRequest extends OkHttpRequest
     protected Request buildRequest(Request.Builder builder, RequestBody requestBody)
     {
         return builder.post(requestBody).build();
+    }
+
+    @Override
+    public String toString()
+    {
+        return super.toString() + ", requestBody{content=" + content + "} ";
     }
 
 }

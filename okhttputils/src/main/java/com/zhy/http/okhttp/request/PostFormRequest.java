@@ -1,11 +1,5 @@
 package com.zhy.http.okhttp.request;
 
-import okhttp3.FormBody;
-import okhttp3.Headers;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -14,6 +8,13 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/12/14.
@@ -117,5 +118,20 @@ public class PostFormRequest extends OkHttpRequest
         {
             builder.add(key, params.get(key));
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        if (files != null)
+        {
+            for (PostFormBuilder.FileInput file : files)
+            {
+                sb.append(file.toString()+"  ");
+            }
+        }
+        return sb.toString();
     }
 }

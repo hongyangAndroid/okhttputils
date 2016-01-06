@@ -40,6 +40,16 @@ public class PostFormBuilder extends OkHttpRequestBuilder
             this.filename = filename;
             this.file = file;
         }
+
+        @Override
+        public String toString()
+        {
+            return "FileInput{" +
+                    "key='" + key + '\'' +
+                    ", filename='" + filename + '\'' +
+                    ", file=" + file +
+                    '}';
+        }
     }
 
     //
@@ -82,6 +92,7 @@ public class PostFormBuilder extends OkHttpRequestBuilder
         return this;
     }
 
+
     @Override
     public PostFormBuilder addHeader(String key, String val)
     {
@@ -92,4 +103,6 @@ public class PostFormBuilder extends OkHttpRequestBuilder
         headers.put(key, val);
         return this;
     }
+
+
 }

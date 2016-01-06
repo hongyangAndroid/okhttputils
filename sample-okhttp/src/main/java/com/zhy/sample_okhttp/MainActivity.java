@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import okhttp3.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -23,11 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Request;
+
 public class MainActivity extends AppCompatActivity
 {
 
 
-    private String mBaseUrl = "http://192.168.56.1:8080/okHttpServer/";
+    private String mBaseUrl = "http://10.138.114.147:8080/okHttpServer/";
 
     private static final String TAG = "MainActivity";
 
