@@ -1,10 +1,10 @@
 package com.zhy.http.okhttp.builder;
 
-import com.squareup.okhttp.MediaType;
+import okhttp3.MediaType;
 import com.zhy.http.okhttp.request.PostStringRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
-import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -61,7 +61,7 @@ public class PostStringBuilder extends OkHttpRequestBuilder
     {
         if (this.params == null)
         {
-            params = new IdentityHashMap<>();
+            params = new LinkedHashMap<>();
         }
         params.put(key, val);
         return this;
@@ -79,7 +79,7 @@ public class PostStringBuilder extends OkHttpRequestBuilder
     {
         if (this.headers == null)
         {
-            headers = new IdentityHashMap<>();
+            headers = new LinkedHashMap<>();
         }
         headers.put(key, val);
         return this;

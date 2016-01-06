@@ -3,7 +3,7 @@ package com.zhy.http.okhttp.callback;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 
 /**
  * Created by zhy on 15/12/14.

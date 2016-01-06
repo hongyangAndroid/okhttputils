@@ -1,11 +1,11 @@
 package com.zhy.http.okhttp.request;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -33,13 +33,13 @@ public class PostFormRequest extends OkHttpRequest
     {
         if (files == null || files.isEmpty())
         {
-            FormEncodingBuilder builder = new FormEncodingBuilder();
+            FormBody.Builder builder = new FormBody.Builder();
             addParams(builder);
             return builder.build();
         } else
         {
-            MultipartBuilder builder = new MultipartBuilder()
-                    .type(MultipartBuilder.FORM);
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM);
             addParams(builder);
 
             for (int i = 0; i < files.size(); i++)
@@ -93,7 +93,7 @@ public class PostFormRequest extends OkHttpRequest
         return contentTypeFor;
     }
 
-    private void addParams(MultipartBuilder builder)
+    private void addParams(MultipartBody.Builder builder)
     {
         if (params != null && !params.isEmpty())
         {
@@ -105,7 +105,7 @@ public class PostFormRequest extends OkHttpRequest
         }
     }
 
-    private void addParams(FormEncodingBuilder builder)
+    private void addParams(FormBody.Builder builder)
     {
         if (params == null || params.isEmpty())
         {

@@ -1,8 +1,8 @@
 package com.zhy.http.okhttp.request;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import com.zhy.http.okhttp.utils.Exceptions;
 
 import java.util.Map;
