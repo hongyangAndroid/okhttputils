@@ -8,7 +8,6 @@ import android.util.Log;
 import com.zhy.http.okhttp.cookie.SimpleCookieJar;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.PostFileBuilder;
@@ -135,19 +134,19 @@ public class OkHttpUtils
         requestCall.getCall().enqueue(new okhttp3.Callback()
         {
             @Override
-            public void onFailure(final Request request, final IOException e)
+            public void onFailure(Call call, final IOException e)
             {
-                sendFailResultCallback(request, e, finalCallback);
+                sendFailResultCallback(call, e, finalCallback);
             }
 
             @Override
-            public void onResponse(final Response response)
+            public void onResponse(final Call call, final Response response)
             {
                 if (response.code() >= 400 && response.code() <= 599)
                 {
                     try
                     {
-                        sendFailResultCallback(requestCall.getRequest(), new RuntimeException(response.body().string()), finalCallback);
+                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
                     } catch (IOException e)
                     {
                         e.printStackTrace();
@@ -161,7 +160,7 @@ public class OkHttpUtils
                     sendSuccessResultCallback(o, finalCallback);
                 } catch (Exception e)
                 {
-                    sendFailResultCallback(response.request(), e, finalCallback);
+                    sendFailResultCallback(call, e, finalCallback);
                 }
 
             }
@@ -169,7 +168,7 @@ public class OkHttpUtils
     }
 
 
-    public void sendFailResultCallback(final Request request, final Exception e, final Callback callback)
+    public void sendFailResultCallback(final Call call, final Exception e, final Callback callback)
     {
         if (callback == null) return;
 
@@ -178,7 +177,7 @@ public class OkHttpUtils
             @Override
             public void run()
             {
-                callback.onError(request, e);
+                callback.onError(call, e);
                 callback.onAfter();
             }
         });
