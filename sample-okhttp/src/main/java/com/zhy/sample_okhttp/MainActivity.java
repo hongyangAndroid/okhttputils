@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Call;
 import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public void onError(Request request, Exception e)
+        public void onError(Call call, Exception e)
         {
             mTv.setText("onError:" + e.getMessage());
         }
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity
                 .execute(new UserCallback()
                 {
                     @Override
-                    public void onError(Request request, Exception e)
+                    public void onError(Call call, Exception e)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                 .execute(new ListUserCallback()//
                 {
                     @Override
-                    public void onError(Request request, Exception e)
+                    public void onError(Call call, Exception e)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity
                 .execute(new BitmapCallback()
                 {
                     @Override
-                    public void onError(Request request, Exception e)
+                    public void onError(Call call, Exception e)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onError(Request request, Exception e)
+                    public void onError(Call call, Exception e)
                     {
                         Log.e(TAG, "onError :" + e.getMessage());
                     }

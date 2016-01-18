@@ -1,5 +1,6 @@
 package com.zhy.http.okhttp.callback;
 
+import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -39,7 +40,7 @@ public abstract class Callback<T>
      */
     public abstract T parseNetworkResponse(Response response) throws Exception;
 
-    public abstract void onError(Request request, Exception e);
+    public abstract void onError(Call call, Exception e);
 
     public abstract void onResponse(T response);
 
@@ -54,7 +55,7 @@ public abstract class Callback<T>
         }
 
         @Override
-        public void onError(Request request, Exception e)
+        public void onError(Call call, Exception e)
         {
 
         }
