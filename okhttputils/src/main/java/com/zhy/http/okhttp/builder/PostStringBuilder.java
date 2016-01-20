@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by zhy on 15/12/14.
  */
-public class PostStringBuilder extends OkHttpRequestBuilder
+public class PostStringBuilder extends OkHttpRequestBuilder<PostStringBuilder>
 {
     private String content;
     private MediaType mediaType;

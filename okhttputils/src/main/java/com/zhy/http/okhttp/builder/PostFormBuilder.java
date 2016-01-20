@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by zhy on 15/12/14.
  */
-public class PostFormBuilder extends OkHttpRequestBuilder
+public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder>
 {
     private List<FileInput> files = new ArrayList<>();
 

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by zhy on 15/12/14.
  */
-public class PostFileBuilder extends OkHttpRequestBuilder
+public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder>
 {
     private File file;
     private MediaType mediaType;
