@@ -24,6 +24,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 
     public void getHtml(View view)
     {
-        String url = "http://www.csdn.net/";
+        String url = "http://sec.mobile.tiancity.com/server/mobilesecurity/version.xml";
         OkHttpUtils
                 .get()
                 .url(url)
@@ -309,6 +310,19 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
     }
+
+
+    public void otherRequestDemo()
+    {
+        //also can use delete ,head , patch
+        OkHttpUtils
+                .put()//
+                .requestBody
+                        (RequestBody.create(null, "may be something"))//
+                .build()//
+                .execute(new MyStringCallback());
+    }
+
 
     @Override
     protected void onDestroy()

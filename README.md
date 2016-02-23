@@ -54,6 +54,7 @@ public abstract class UserCallback extends Callback<User>
 * 支持自签名网站https的访问，提供方法设置下证书就行
 * 支持取消某个请求
 * 支持自定义Callback
+* 支持HEAD、DELETE、PATCH、PUT
 
 ##用法示例
 
@@ -252,6 +253,21 @@ new Callback<T>()
 ```
 
 callback回调中有`inProgress `方法，直接复写即可。
+
+### HEAD、DELETE、PUT、PATCH
+
+```java
+
+OkHttpUtils
+     .put()//also can use delete() ,head() , patch()
+     .requestBody(RequestBody.create(null, "may be something"))//
+     .build()//
+     .execute(new MyStringCallback());
+```
+
+如果需要requestBody，例如：PUT、PATCH，自行构造进行传入。
+
+
 
 ### 同步的请求
 

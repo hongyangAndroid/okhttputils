@@ -5,15 +5,13 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.zhy.http.okhttp.cookie.SimpleCookieJar;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
 import com.zhy.http.okhttp.builder.GetBuilder;
+import com.zhy.http.okhttp.builder.OtherRequestBuilder;
 import com.zhy.http.okhttp.builder.PostFileBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.builder.PostStringBuilder;
 import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.cookie.SimpleCookieJar;
 import com.zhy.http.okhttp.https.HttpsUtils;
 import com.zhy.http.okhttp.request.RequestCall;
 
@@ -23,6 +21,10 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 /**
  * Created by zhy on 15/8/17.
@@ -115,12 +117,32 @@ public class OkHttpUtils
         return new PostFormBuilder();
     }
 
+    public static OtherRequestBuilder put()
+    {
+        return new OtherRequestBuilder(METHOD.PUT);
+    }
+
+    public static OtherRequestBuilder head()
+    {
+        return new OtherRequestBuilder(METHOD.HEAD);
+    }
+
+    public static OtherRequestBuilder delete()
+    {
+        return new OtherRequestBuilder(METHOD.DELETE);
+    }
+
+    public static OtherRequestBuilder patch()
+    {
+        return new OtherRequestBuilder(METHOD.PATCH);
+    }
+
 
     public void execute(final RequestCall requestCall, Callback callback)
     {
         if (debug)
         {
-            if(TextUtils.isEmpty(tag))
+            if (TextUtils.isEmpty(tag))
             {
                 tag = TAG;
             }
@@ -229,6 +251,17 @@ public class OkHttpUtils
         mOkHttpClient = getOkHttpClient().newBuilder()
                 .connectTimeout(timeout, units)
                 .build();
+    }
+
+
+    public static class METHOD
+    {
+        public static final String HEAD = "HEAD";
+        public static final String DELETE = "DELETE";
+        public static final String PUT = "PUT";
+        public static final String PATCH = "PATCH";
+
+
     }
 }
 
