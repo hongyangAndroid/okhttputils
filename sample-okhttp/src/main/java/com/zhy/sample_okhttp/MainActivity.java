@@ -24,7 +24,6 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -312,13 +311,14 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void otherRequestDemo()
+    public void otherRequestDemo(View view)
     {
         //also can use delete ,head , patch
         OkHttpUtils
                 .put()//
+                .url("http://11111.com")
                 .requestBody
-                        (RequestBody.create(null, "may be something"))//
+                        ("may be something")//
                 .build()//
                 .execute(new MyStringCallback());
     }

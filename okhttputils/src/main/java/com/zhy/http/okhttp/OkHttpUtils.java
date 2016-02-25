@@ -37,6 +37,9 @@ public class OkHttpUtils
     private OkHttpClient mOkHttpClient;
     private Handler mDelivery;
 
+
+
+
     private OkHttpUtils()
     {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
@@ -84,6 +87,11 @@ public class OkHttpUtils
             }
         }
         return mInstance;
+    }
+
+    public void setOkHttpClient(OkHttpClient mOkHttpClient)
+    {
+        this.mOkHttpClient = mOkHttpClient;
     }
 
     public Handler getDelivery()
@@ -242,6 +250,13 @@ public class OkHttpUtils
     {
         mOkHttpClient = getOkHttpClient().newBuilder()
                 .sslSocketFactory(HttpsUtils.getSslSocketFactory(certificates, null, null))
+                .build();
+    }
+
+    public void setHostNameVerifier(HostnameVerifier hostNameVerifier)
+    {
+        mOkHttpClient = getOkHttpClient().newBuilder()
+                .hostnameVerifier(hostNameVerifier)
                 .build();
     }
 

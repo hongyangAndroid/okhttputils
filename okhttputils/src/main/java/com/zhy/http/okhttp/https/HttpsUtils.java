@@ -12,9 +12,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -32,8 +34,15 @@ public class HttpsUtils
             TrustManager[] trustManagers = prepareTrustManager(certificates);
             KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
             SSLContext sslContext = SSLContext.getInstance("TLS");
-
-            sslContext.init(keyManagers, new TrustManager[]{new MyTrustManager(chooseTrustManager(trustManagers))}, new SecureRandom());
+            TrustManager trustManager = null;
+            if (trustManagers != null)
+            {
+                trustManager = new MyTrustManager(chooseTrustManager(trustManagers));
+            } else
+            {
+                trustManager = new UnSafeTrustManager();
+            }
+            sslContext.init(keyManagers, new TrustManager[]{trustManager}, new SecureRandom());
             return sslContext.getSocketFactory();
         } catch (NoSuchAlgorithmException e)
         {
@@ -44,6 +53,36 @@ public class HttpsUtils
         } catch (KeyStoreException e)
         {
             throw new AssertionError(e);
+        }
+    }
+
+    private class UnSafeHostnameVerifier implements HostnameVerifier
+    {
+        @Override
+        public boolean verify(String hostname, SSLSession session)
+        {
+            return true;
+        }
+    }
+
+    private static class UnSafeTrustManager implements X509TrustManager
+    {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException
+        {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException
+        {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers()
+        {
+            return null;
         }
     }
 

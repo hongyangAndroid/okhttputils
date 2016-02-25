@@ -74,6 +74,10 @@
             android:onClick="downloadFile"
             android:text="Download File"/>
 
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:onClick="otherRequestDemo"
+                android:text="otherRequestDemo"/>
+
     </com.zhy.sample_okhttp.FlowLayout>
 
     <ProgressBar

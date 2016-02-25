@@ -16,6 +16,7 @@ public class OtherRequestBuilder extends OkHttpRequestBuilder
 {
     private RequestBody requestBody;
     private String method;
+    private String content;
 
     public OtherRequestBuilder(String method)
     {
@@ -32,7 +33,7 @@ public class OtherRequestBuilder extends OkHttpRequestBuilder
             url = appendParams(url, params);
         }
 
-        return new OtherRequest(requestBody, method, url, tag, params, headers).build();
+        return new OtherRequest(requestBody, content, method, url, tag, params, headers).build();
     }
 
     private String appendParams(String url, Map<String, String> params)
@@ -54,6 +55,12 @@ public class OtherRequestBuilder extends OkHttpRequestBuilder
     public OtherRequestBuilder requestBody(RequestBody requestBody)
     {
         this.requestBody = requestBody;
+        return this;
+    }
+
+    public OtherRequestBuilder requestBody(String content)
+    {
+        this.content = content;
         return this;
     }
 

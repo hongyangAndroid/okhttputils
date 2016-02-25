@@ -16,7 +16,7 @@
 	或者
 	
 	```
-	compile 'com.zhy:okhttputils:2.2.0'
+	compile 'com.zhy:okhttputils:2.2.1'
 	```
 	
 * Eclipse
@@ -290,14 +290,18 @@ execute方法不传入callback即为同步的请求，返回Response。
 
 ```java
 OkHttpClient client = 
-OkHttpUtils.getInstance().getOkHttpClient();
+OkHttpUtils.getInstance().getOkHttpClient().newBuilder().setXXX;
+OkHttpUtils.getInstance().setOkHttpClient(client);
+
 ```
-然后调用client的各种set方法。
+然后调用builder的各种set方法。
 
 例如：
 
 ```java
-client.setConnectTimeout(100000, TimeUnit.MILLISECONDS);
+mOkHttpClient = OkHttpUtils.getInstance().getOkHttpClient().newBuilder()
+                .connectTimeout(timeout, units)
+                .build();
 ```
 
 ### 为单个请求设置超时
@@ -343,20 +347,21 @@ public class MyApplication extends Application
     {
         super.onCreate();
 
-        try
-        {
-            OkHttpClientManager.getInstance()
-            			.getHttpsDelegate()
-                    .setCertificates(getAssets().open("aaa.cer"),
-                            getAssets().open("server.cer"));
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
+                       new Buffer()
+                       .writeUtf8(CER_12306)
+                       .inputStream()});
     }
 }
 ```
 即可。别忘了注册Application。
+
+
+使用https，但是默认信任所有证书
+
+```
+OkHttpUtils.getInstance().setCertificates();
+```
 
 
 ### Debug信息
