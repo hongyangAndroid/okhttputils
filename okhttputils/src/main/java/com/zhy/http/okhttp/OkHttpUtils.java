@@ -2,7 +2,6 @@ package com.zhy.http.okhttp;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.zhy.http.okhttp.builder.GetBuilder;
@@ -13,6 +12,7 @@ import com.zhy.http.okhttp.builder.PostStringBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.cookie.SimpleCookieJar;
 import com.zhy.http.okhttp.https.HttpsUtils;
+import com.zhy.http.okhttp.log.LoggerInterceptor;
 import com.zhy.http.okhttp.request.RequestCall;
 
 import java.io.IOException;
@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -31,25 +32,20 @@ import okhttp3.Response;
  */
 public class OkHttpUtils
 {
-    public static final String TAG = "OkHttpUtils";
+
     public static final long DEFAULT_MILLISECONDS = 10000;
     private static OkHttpUtils mInstance;
     private OkHttpClient mOkHttpClient;
     private Handler mDelivery;
 
-
-
-
-    private OkHttpUtils()
+    public OkHttpUtils(OkHttpClient okHttpClient)
     {
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-        //cookie enabled
-        okHttpClientBuilder.cookieJar(new SimpleCookieJar());
-        mDelivery = new Handler(Looper.getMainLooper());
-
-
-        if (true)
+        if (okHttpClient == null)
         {
+            OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+            //cookie enabled
+            okHttpClientBuilder.cookieJar(new SimpleCookieJar());
+            mDelivery = new Handler(Looper.getMainLooper());
             okHttpClientBuilder.hostnameVerifier(new HostnameVerifier()
             {
                 @Override
@@ -58,21 +54,35 @@ public class OkHttpUtils
                     return true;
                 }
             });
+            mOkHttpClient = okHttpClientBuilder.build();
+        } else
+        {
+            mOkHttpClient = okHttpClient;
         }
 
-        mOkHttpClient = okHttpClientBuilder.build();
     }
 
-    private boolean debug;
-    private String tag;
 
     public OkHttpUtils debug(String tag)
     {
-        debug = true;
-        this.tag = tag;
+        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(new LoggerInterceptor(tag)).build();
         return this;
     }
 
+    public static OkHttpUtils getInstance(OkHttpClient okHttpClient)
+    {
+        if (mInstance == null)
+        {
+            synchronized (OkHttpUtils.class)
+            {
+                if (mInstance == null)
+                {
+                    mInstance = new OkHttpUtils(okHttpClient);
+                }
+            }
+        }
+        return mInstance;
+    }
 
     public static OkHttpUtils getInstance()
     {
@@ -82,17 +92,13 @@ public class OkHttpUtils
             {
                 if (mInstance == null)
                 {
-                    mInstance = new OkHttpUtils();
+                    mInstance = new OkHttpUtils(null);
                 }
             }
         }
         return mInstance;
     }
 
-    public void setOkHttpClient(OkHttpClient mOkHttpClient)
-    {
-        this.mOkHttpClient = mOkHttpClient;
-    }
 
     public Handler getDelivery()
     {
@@ -103,7 +109,6 @@ public class OkHttpUtils
     {
         return mOkHttpClient;
     }
-
 
     public static GetBuilder get()
     {
@@ -145,18 +150,8 @@ public class OkHttpUtils
         return new OtherRequestBuilder(METHOD.PATCH);
     }
 
-
     public void execute(final RequestCall requestCall, Callback callback)
     {
-        if (debug)
-        {
-            if (TextUtils.isEmpty(tag))
-            {
-                tag = TAG;
-            }
-            Log.d(tag, "{method:" + requestCall.getRequest().method() + ", detail:" + requestCall.getOkHttpRequest().toString() + "}");
-        }
-
         if (callback == null)
             callback = Callback.CALLBACK_DEFAULT;
         final Callback finalCallback = callback;
@@ -246,10 +241,35 @@ public class OkHttpUtils
     }
 
 
+    /**
+     * for https-way authentication
+     *
+     * @param certificates
+     */
     public void setCertificates(InputStream... certificates)
     {
+        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslSocketFactory(certificates, null, null);
+
+        Log.e("TAG", sslSocketFactory + "");
+
+        OkHttpClient.Builder builder = getOkHttpClient().newBuilder();
+        builder = builder.sslSocketFactory(sslSocketFactory);
+        mOkHttpClient = builder.build();
+
+
+    }
+
+    /**
+     * for https mutual authentication
+     *
+     * @param certificates
+     * @param bksFile
+     * @param password
+     */
+    public void setCertificates(InputStream[] certificates, InputStream bksFile, String password)
+    {
         mOkHttpClient = getOkHttpClient().newBuilder()
-                .sslSocketFactory(HttpsUtils.getSslSocketFactory(certificates, null, null))
+                .sslSocketFactory(HttpsUtils.getSslSocketFactory(certificates, bksFile, password))
                 .build();
     }
 
@@ -260,11 +280,24 @@ public class OkHttpUtils
                 .build();
     }
 
-
     public void setConnectTimeout(int timeout, TimeUnit units)
     {
         mOkHttpClient = getOkHttpClient().newBuilder()
                 .connectTimeout(timeout, units)
+                .build();
+    }
+
+    public void setReadTimeout(int timeout, TimeUnit units)
+    {
+        mOkHttpClient = getOkHttpClient().newBuilder()
+                .readTimeout(timeout, units)
+                .build();
+    }
+
+    public void setWriteTimeout(int timeout, TimeUnit units)
+    {
+        mOkHttpClient = getOkHttpClient().newBuilder()
+                .writeTimeout(timeout, units)
                 .build();
     }
 
@@ -275,8 +308,6 @@ public class OkHttpUtils
         public static final String DELETE = "DELETE";
         public static final String PUT = "PUT";
         public static final String PATCH = "PATCH";
-
-
     }
 }
 

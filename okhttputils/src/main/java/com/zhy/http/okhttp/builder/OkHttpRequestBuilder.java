@@ -18,10 +18,6 @@ public abstract class OkHttpRequestBuilder
 
     public abstract OkHttpRequestBuilder tag(Object tag);
 
-    public abstract OkHttpRequestBuilder params(Map<String, String> params);
-
-    public abstract OkHttpRequestBuilder addParams(String key, String val);
-
     public abstract OkHttpRequestBuilder headers(Map<String, String> headers);
 
     public abstract OkHttpRequestBuilder addHeader(String key, String val);

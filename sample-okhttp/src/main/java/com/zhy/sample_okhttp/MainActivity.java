@@ -23,19 +23,21 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.MediaType;
 import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity
 {
 
 
-    private String mBaseUrl = "http://10.138.114.147:8080/okHttpServer/";
+    private String mBaseUrl = "http://192.168.1.102:8080/okHttpServer/";
 
     private static final String TAG = "MainActivity";
 
     private TextView mTv;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
+
 
     public class MyStringCallback extends StringCallback
     {
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         OkHttpUtils
                 .postString()
                 .url(url)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(new Gson().toJson(new User("zhy", "123")))
                 .build()
                 .execute(new MyStringCallback());
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity
     {
         String url = mBaseUrl + "user!getUser";
         OkHttpUtils
-                .get()//
+                .post()//
                 .url(url)//
                 .addParams("username", "hyman")//
                 .addParams("password", "123")//

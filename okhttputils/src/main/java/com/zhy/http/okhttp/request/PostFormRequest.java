@@ -78,7 +78,7 @@ public class PostFormRequest extends OkHttpRequest
     }
 
     @Override
-    protected Request buildRequest(Request.Builder builder, RequestBody requestBody)
+    protected Request buildRequest(RequestBody requestBody)
     {
         return builder.post(requestBody).build();
     }
@@ -108,30 +108,13 @@ public class PostFormRequest extends OkHttpRequest
 
     private void addParams(FormBody.Builder builder)
     {
-        if (params == null || params.isEmpty())
+        if (params != null)
         {
-            builder.add("1", "1");
-            return;
-        }
-
-        for (String key : params.keySet())
-        {
-            builder.add(key, params.get(key));
-        }
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        if (files != null)
-        {
-            for (PostFormBuilder.FileInput file : files)
+            for (String key : params.keySet())
             {
-                sb.append(file.toString()+"  ");
+                builder.add(key, params.get(key));
             }
         }
-        return sb.toString();
     }
+
 }

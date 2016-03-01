@@ -12,7 +12,7 @@ import okhttp3.RequestBody;
 /**
  * for HEAD、DELETE、PUT等其他方法
  */
-public class OtherRequestBuilder extends OkHttpRequestBuilder
+public class OtherRequestBuilder extends OkHttpRequestBuilder implements HasParamsable
 {
     private RequestBody requestBody;
     private String method;

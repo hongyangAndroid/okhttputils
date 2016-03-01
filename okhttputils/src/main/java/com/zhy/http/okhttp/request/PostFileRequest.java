@@ -19,7 +19,6 @@ public class PostFileRequest extends OkHttpRequest
     private File file;
     private MediaType mediaType;
 
-
     public PostFileRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, File file, MediaType mediaType)
     {
         super(url, tag, params, headers);
@@ -34,7 +33,6 @@ public class PostFileRequest extends OkHttpRequest
         {
             this.mediaType = MEDIA_TYPE_STREAM;
         }
-
     }
 
     @Override
@@ -44,16 +42,11 @@ public class PostFileRequest extends OkHttpRequest
     }
 
     @Override
-    protected Request buildRequest(Request.Builder builder, RequestBody requestBody)
+    protected Request buildRequest(RequestBody requestBody)
     {
         return builder.post(requestBody).build();
     }
 
-    @Override
-    public String toString()
-    {
-        return super.toString() + ", requestBody{uploadfilePath=" + file.getAbsolutePath() + "} ";
-    }
 
 
 }

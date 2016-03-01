@@ -1,9 +1,9 @@
 package com.zhy.http.okhttp.request;
 
+import java.util.Map;
+
 import okhttp3.Request;
 import okhttp3.RequestBody;
-
-import java.util.Map;
 
 /**
  * Created by zhy on 15/12/14.
@@ -15,6 +15,7 @@ public class GetRequest extends OkHttpRequest
         super(url, tag, params, headers);
     }
 
+
     @Override
     protected RequestBody buildRequestBody()
     {
@@ -22,12 +23,10 @@ public class GetRequest extends OkHttpRequest
     }
 
     @Override
-    protected Request buildRequest(Request.Builder builder, RequestBody requestBody)
+    protected Request buildRequest(RequestBody requestBody)
     {
         return builder.get().build();
     }
-
-
 
 
 }

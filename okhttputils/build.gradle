@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "2.2.1"
+version = "2.3.1"
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 7
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -112,7 +112,7 @@ def makeJar(String target,String classDir){
 
 //新建一个task,名为buildLib,依赖build(build是一个自带的task)
 task buildLib(dependsOn:['build'])<< {
-    makeJar("okhttputils.jar","build/intermediates/classes/release")
+    makeJar("../okhttputils-2_3_1.jar","build/intermediates/classes/release")
 }
 
 task clearJar(type: Delete) {
@@ -132,5 +132,5 @@ makeJar.dependsOn(clearJar, build)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
 }

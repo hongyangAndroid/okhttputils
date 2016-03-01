@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by zhy on 15/12/14.
  */
-public class GetBuilder extends OkHttpRequestBuilder
+public class GetBuilder extends OkHttpRequestBuilder implements HasParamsable
 {
     @Override
     public RequestCall build()

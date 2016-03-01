@@ -1,24 +1,23 @@
 package com.zhy.http.okhttp.request;
 
-import okhttp3.Headers;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.utils.Exceptions;
 
 import java.util.Map;
+
+import okhttp3.Headers;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/11/6.
  */
 public abstract class OkHttpRequest
 {
-
     protected String url;
     protected Object tag;
     protected Map<String, String> params;
     protected Map<String, String> headers;
-
 
     protected Request.Builder builder = new Request.Builder();
 
@@ -34,8 +33,20 @@ public abstract class OkHttpRequest
         {
             Exceptions.illegalArgument("url can not be null.");
         }
+
+        initBuilder();
     }
 
+
+
+    /**
+     * 初始化一些基本参数 url , tag , headers
+     */
+    private void initBuilder()
+    {
+        builder.url(url).tag(tag);
+        appendHeaders();
+    }
 
     protected abstract RequestBody buildRequestBody();
 
@@ -44,7 +55,7 @@ public abstract class OkHttpRequest
         return requestBody;
     }
 
-    protected abstract Request buildRequest(Request.Builder builder, RequestBody requestBody);
+    protected abstract Request buildRequest(RequestBody requestBody);
 
     public RequestCall build()
     {
@@ -54,16 +65,10 @@ public abstract class OkHttpRequest
 
     public Request generateRequest(Callback callback)
     {
-        RequestBody requestBody = wrapRequestBody(buildRequestBody(), callback);
-        prepareBuilder();
-        return buildRequest(builder, requestBody);
-    }
-
-
-    private void prepareBuilder()
-    {
-        builder.url(url).tag(tag);
-        appendHeaders();
+        RequestBody requestBody = buildRequestBody();
+        RequestBody wrappedRequestBody = wrapRequestBody(requestBody, callback);
+        Request request = buildRequest(wrappedRequestBody);
+        return request;
     }
 
 
@@ -79,14 +84,4 @@ public abstract class OkHttpRequest
         builder.headers(headerBuilder.build());
     }
 
-    @Override
-    public String toString()
-    {
-        return "OkHttpRequest{" +
-                "url='" + url + '\'' +
-                ", tag=" + tag +
-                ", params=" + params +
-                ", headers=" + headers +
-                '}';
-    }
 }

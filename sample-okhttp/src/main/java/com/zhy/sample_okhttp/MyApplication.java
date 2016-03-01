@@ -30,14 +30,18 @@ public class MyApplication extends Application
     public void onCreate()
     {
         super.onCreate();
-        //这里可以设置证书
+        //这里可以设置自签名证书
 //        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
 //                new Buffer()
 //                        .writeUtf8(CER_12306)
 //                        .inputStream()});
-        OkHttpUtils.getInstance().debug("testDebug").setConnectTimeout(100000, TimeUnit.MILLISECONDS);
+        OkHttpUtils.getInstance().debug("OkHttpUtils").setConnectTimeout(100000, TimeUnit.MILLISECONDS);
         //使用https，但是默认信任全部证书
         OkHttpUtils.getInstance().setCertificates();
+
+
+        //使用这种方式，设置多个OkHttpClient参数
+//        OkHttpUtils.getInstance(new OkHttpClient.Builder().build());
 
     }
 }

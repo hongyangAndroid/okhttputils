@@ -16,12 +16,14 @@
 	或者
 	
 	```
-	compile 'com.zhy:okhttputils:2.2.1'
+	compile 'com.zhy:okhttputils:2.3.0'
 	```
 	
 * Eclipse
 	
-	自行copy源码。
+	下载最新jar:[okhttputils-2_3_1.jar](okhttputils-2_3_1.jar?raw=true)
+
+	注：需要同时导入okhttp和okio的jar，下载见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 	
 
 **注意**
@@ -289,20 +291,17 @@ execute方法不传入callback即为同步的请求，返回Response。
 可以在Application中，通过：
 
 ```java
-OkHttpClient client = 
-OkHttpUtils.getInstance().getOkHttpClient().newBuilder().setXXX;
-OkHttpUtils.getInstance().setOkHttpClient(client);
-
+OkHttpUtils.getInstance().setXXX()
 ```
-然后调用builder的各种set方法。
 
-例如：
+如果需要完全配置OkHttpClient
 
 ```java
-mOkHttpClient = OkHttpUtils.getInstance().getOkHttpClient().newBuilder()
-                .connectTimeout(timeout, units)
-                .build();
+OkHttpUtils.getInstance(new OkHttpClient.Builder().setXXX().build());
 ```
+
+即完全的自己构造OkHttpClient，然后传入getInstance(okHttpClient)方法。
+
 
 ### 为单个请求设置超时
 
@@ -329,7 +328,6 @@ mOkHttpClient = OkHttpUtils.getInstance().getOkHttpClient().newBuilder()
 
 ```xml
 OkHttpUtils.getInstance()
-		.getHttpsDelegate()
        .setCertificates(inputstream);
 ```
 

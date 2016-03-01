@@ -1,17 +1,19 @@
 package com.zhy.http.okhttp.request;
 
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 /**
  * Created by zhy on 15/12/15.
+ * 对OkHttpRequest的封装，对外提供更多的接口：cancel(),readTimeOut()...
  */
 public class RequestCall
 {
@@ -25,32 +27,27 @@ public class RequestCall
 
     private OkHttpClient clone;
 
-
     public RequestCall(OkHttpRequest request)
     {
         this.okHttpRequest = request;
     }
-
     public RequestCall readTimeOut(long readTimeOut)
     {
         this.readTimeOut = readTimeOut;
         return this;
     }
-
     public RequestCall writeTimeOut(long writeTimeOut)
     {
         this.writeTimeOut = writeTimeOut;
         return this;
     }
-
     public RequestCall connTimeOut(long connTimeOut)
     {
         this.connTimeOut = connTimeOut;
         return this;
     }
 
-
-    public Call generateCall(Callback callback)
+    public Call buildCall(Callback callback)
     {
         request = generateRequest(callback);
 
@@ -81,7 +78,7 @@ public class RequestCall
 
     public void execute(Callback callback)
     {
-        generateCall(callback);
+        buildCall(callback);
 
         if (callback != null)
         {
@@ -108,7 +105,7 @@ public class RequestCall
 
     public Response execute() throws IOException
     {
-        generateCall(null);
+        buildCall(null);
         return call.execute();
     }
 

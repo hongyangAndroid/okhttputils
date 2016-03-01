@@ -43,15 +43,10 @@ public class PostStringRequest extends OkHttpRequest
     }
 
     @Override
-    protected Request buildRequest(Request.Builder builder, RequestBody requestBody)
+    protected Request buildRequest( RequestBody requestBody)
     {
         return builder.post(requestBody).build();
     }
 
-    @Override
-    public String toString()
-    {
-        return super.toString() + ", requestBody{content=" + content + "} ";
-    }
 
 }

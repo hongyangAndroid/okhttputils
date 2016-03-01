@@ -18,6 +18,7 @@ import okhttp3.internal.http.HttpMethod;
 public class OtherRequest extends OkHttpRequest
 {
     private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+
     private RequestBody requestBody;
     private String method;
     private String content;
@@ -48,7 +49,7 @@ public class OtherRequest extends OkHttpRequest
     }
 
     @Override
-    protected Request buildRequest(Request.Builder builder, RequestBody requestBody)
+    protected Request buildRequest(RequestBody requestBody)
     {
         if (method.equals(OkHttpUtils.METHOD.PUT))
         {
@@ -70,13 +71,4 @@ public class OtherRequest extends OkHttpRequest
         return builder.build();
     }
 
-    @Override
-    public String toString()
-    {
-        if (!TextUtils.isEmpty(content))
-        {
-            return super.toString() + ", requestBody{content=" + content + "} ";
-        }
-        return super.toString() + ", requestBody{requestBody=" + requestBody.toString() + "} ";
-    }
 }

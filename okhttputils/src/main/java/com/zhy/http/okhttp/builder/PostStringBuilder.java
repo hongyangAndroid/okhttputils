@@ -1,11 +1,12 @@
 package com.zhy.http.okhttp.builder;
 
-import okhttp3.MediaType;
 import com.zhy.http.okhttp.request.PostStringRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import okhttp3.MediaType;
 
 /**
  * Created by zhy on 15/12/14.
@@ -28,7 +29,6 @@ public class PostStringBuilder extends OkHttpRequestBuilder
         return this;
     }
 
-
     @Override
     public RequestCall build()
     {
@@ -49,23 +49,6 @@ public class PostStringBuilder extends OkHttpRequestBuilder
         return this;
     }
 
-    @Override
-    public PostStringBuilder params(Map<String, String> params)
-    {
-        this.params = params;
-        return this;
-    }
-
-    @Override
-    public PostStringBuilder addParams(String key, String val)
-    {
-        if (this.params == null)
-        {
-            params = new LinkedHashMap<>();
-        }
-        params.put(key, val);
-        return this;
-    }
 
     @Override
     public PostStringBuilder headers(Map<String, String> headers)
