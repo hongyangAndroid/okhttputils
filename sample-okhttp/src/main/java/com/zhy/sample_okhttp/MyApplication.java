@@ -2,12 +2,9 @@ package com.zhy.sample_okhttp;
 
 import android.app.Application;
 
-import com.zhy.http.okhttp.OkHttpClientManager;
+import com.zhy.http.okhttp.OkHttpUtils;
 
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
-
-import okio.Buffer;
 
 /**
  * Created by zhy on 15/8/25.
@@ -33,12 +30,14 @@ public class MyApplication extends Application
     public void onCreate()
     {
         super.onCreate();
-        OkHttpClientManager.getInstance().setCertificates(new InputStream[]{
-                new Buffer()
-                        .writeUtf8(CER_12306)
-                        .inputStream()});
-        OkHttpClientManager.getInstance().getOkHttpClient().setConnectTimeout(100000, TimeUnit.MILLISECONDS);
-
+        //这里可以设置证书
+//        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
+//                new Buffer()
+//                        .writeUtf8(CER_12306)
+//                        .inputStream()});
+        OkHttpUtils.getInstance().debug("testDebug").setConnectTimeout(100000, TimeUnit.MILLISECONDS);
+        //使用https，但是默认信任全部证书
+        OkHttpUtils.getInstance().setCertificates();
 
     }
 }

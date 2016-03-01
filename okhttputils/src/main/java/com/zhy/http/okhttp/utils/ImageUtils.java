@@ -1,4 +1,4 @@
-package com.zhy.http.okhttp;
+package com.zhy.http.okhttp.utils;
 
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
