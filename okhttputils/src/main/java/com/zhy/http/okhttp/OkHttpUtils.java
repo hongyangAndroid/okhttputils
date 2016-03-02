@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.zhy.http.okhttp.builder.GetBuilder;
+import com.zhy.http.okhttp.builder.HeadBuilder;
 import com.zhy.http.okhttp.builder.OtherRequestBuilder;
 import com.zhy.http.okhttp.builder.PostFileBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -135,9 +136,9 @@ public class OkHttpUtils
         return new OtherRequestBuilder(METHOD.PUT);
     }
 
-    public static OtherRequestBuilder head()
+    public static HeadBuilder head()
     {
-        return new OtherRequestBuilder(METHOD.HEAD);
+        return new HeadBuilder();
     }
 
     public static OtherRequestBuilder delete()

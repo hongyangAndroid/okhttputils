@@ -22,7 +22,7 @@ public class GetBuilder extends OkHttpRequestBuilder implements HasParamsable
         return new GetRequest(url, tag, params, headers).build();
     }
 
-    private String appendParams(String url, Map<String, String> params)
+    protected String appendParams(String url, Map<String, String> params)
     {
         StringBuilder sb = new StringBuilder();
         sb.append(url + "?");

@@ -23,6 +23,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile project(':okhttputils')
-//    compile 'com.zhy:okhttputils:2.3.0'
+//    compile 'com.zhy:okhttputils:2.3.3'
     compile 'com.google.code.gson:gson:2.3.1'
 }

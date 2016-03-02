@@ -317,6 +317,7 @@ public class MainActivity extends AppCompatActivity
     public void otherRequestDemo(View view)
     {
         //also can use delete ,head , patch
+        /*
         OkHttpUtils
                 .put()//
                 .url("http://11111.com")
@@ -324,6 +325,19 @@ public class MainActivity extends AppCompatActivity
                         ("may be something")//
                 .build()//
                 .execute(new MyStringCallback());
+
+
+
+        OkHttpUtils
+                .head()//
+                .url(url)
+                .addParams("name", "zhy")
+                .build()
+                .execute();
+
+       */
+
+
     }
 
 
