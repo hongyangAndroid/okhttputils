@@ -123,7 +123,7 @@ task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
     into('build/outputs/')
     include('classes.jar')
-    rename ('classes.jar', 'okhttputils.jar')
+    rename ('classes.jar', 'okhttputils_2_3_1.jar')
 }
 
 makeJar.dependsOn(clearJar, build)
