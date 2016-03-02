@@ -66,7 +66,20 @@ public class OkHttpUtils
 
     public OkHttpUtils debug(String tag)
     {
-        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(new LoggerInterceptor(tag)).build();
+        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(new LoggerInterceptor(tag, false)).build();
+        return this;
+    }
+
+    /**
+     * showResponse may cause error, but you can try .
+     *
+     * @param tag
+     * @param showResponse
+     * @return
+     */
+    public OkHttpUtils debug(String tag, boolean showResponse)
+    {
+        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(new LoggerInterceptor(tag, showResponse)).build();
         return this;
     }
 

@@ -21,14 +21,21 @@ public class LoggerInterceptor implements Interceptor
 {
     public static final String TAG = "OkHttpUtils";
     private String tag;
+    private boolean showResponse;
 
-    public LoggerInterceptor(String tag)
+    public LoggerInterceptor(String tag, boolean showResponse)
     {
         if (TextUtils.isEmpty(tag))
         {
             tag = TAG;
         }
+        this.showResponse = showResponse;
         this.tag = tag;
+    }
+
+    public LoggerInterceptor(String tag)
+    {
+        this(tag, false);
     }
 
     @Override
@@ -37,12 +44,12 @@ public class LoggerInterceptor implements Interceptor
         Request request = chain.request();
         logForRequest(request);
         Response response = chain.proceed(request);
-        logForResponse(response);
-        return response;
 
+
+        return logForResponse(response);
     }
 
-    private void logForResponse(Response response)
+    private Response logForResponse(Response response)
     {
         try
         {
@@ -55,18 +62,23 @@ public class LoggerInterceptor implements Interceptor
             Log.e(tag, "protocol : " + clone.protocol());
             if (!TextUtils.isEmpty(clone.message()))
                 Log.e(tag, "message : " + clone.message());
-            ResponseBody body = clone.body();
-            if (body != null)
+
+            if (showResponse)
             {
-                MediaType mediaType = body.contentType();
-                if (mediaType != null)
+                ResponseBody body = clone.body();
+                if (body != null)
                 {
-                    if (isText(mediaType))
+                    MediaType mediaType = body.contentType();
+                    if (mediaType != null)
                     {
                         Log.e(tag, "responseBody's contentType : " + mediaType.toString());
                         if (isText(mediaType))
                         {
-                            Log.e(tag, "responseBody's content : " + body.string());
+                            String resp = body.string();
+                            Log.e(tag, "responseBody's content : " + resp);
+
+                            body = ResponseBody.create(mediaType, resp);
+                            return response.newBuilder().body(body).build();
                         } else
                         {
                             Log.e(tag, "responseBody's content : " + " maybe [file part] , too large too print , ignored!");
@@ -74,11 +86,14 @@ public class LoggerInterceptor implements Interceptor
                     }
                 }
             }
+
             Log.e(tag, "========response'log=======end");
         } catch (Exception e)
         {
 //            e.printStackTrace();
         }
+
+        return response;
     }
 
     private void logForRequest(Request request)
