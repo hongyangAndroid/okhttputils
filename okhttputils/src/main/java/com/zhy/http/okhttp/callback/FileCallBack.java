@@ -23,7 +23,7 @@ public abstract class FileCallBack extends Callback<File>
      */
     private String destFileName;
 
-    public abstract void inProgress(float progress);
+    public abstract void inProgress(float progress,long total);
 
     public FileCallBack(String destFileDir, String destFileName)
     {
@@ -71,7 +71,7 @@ public abstract class FileCallBack extends Callback<File>
                     public void run()
                     {
 
-                        inProgress(finalSum * 1.0f / total);
+                        inProgress(finalSum * 1.0f / total,total);
                     }
                 });
             }
