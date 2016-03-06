@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void inProgress(float progress)
+                    public void inProgress(float progress, long total)
                     {
                         mProgressBar.setProgress((int) (100 * progress));
                     }
