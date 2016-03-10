@@ -43,6 +43,7 @@ public final class SimpleCookieJar implements CookieJar
             if (cookie.matches(url))
             {
 //                Log.e("===loadForRequest", cookie.name() + " , " + cookie.value());
+//                Log.e("===loadForRequest", cookie.expiresAt() + " . " + System.currentTimeMillis());
                 result.add(cookie);
             }
         }

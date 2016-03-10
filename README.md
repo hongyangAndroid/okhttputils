@@ -16,12 +16,12 @@
 	或者
 	
 	```
-	compile 'com.zhy:okhttputils:2.3.5'
+	compile 'com.zhy:okhttputils:2.3.6'
 	```
 	
 * Eclipse
 	
-	下载最新jar:[okhttputils-2_3_5.jar](okhttputils-2_3_5.jar?raw=true)
+	下载最新jar:[okhttputils-2_3_6.jar](okhttputils-2_3_6.jar?raw=true)
 
 	注：需要同时导入okhttp和okio的jar，下载见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 	
@@ -402,7 +402,25 @@ protected void onDestroy()
 ```
 比如，当前Activity页面所有的请求以Activity对象作为tag，可以在onDestory里面统一取消。
 
+## 混淆
 
+```
+#okhttputils
+-dontwarn com.zhy.http.**
+-keep class com.zhy.http.**{*;}
+-keep interface com.zhy.http.**{*;}
+
+#okhttp
+-dontwarn okhttp3.**
+-keep class okhttp3.**{*;}
+-keep interface okhttp3.**{*;}
+
+#okio
+-dontwarn okio.**
+-keep class okio.**{*;}
+-keep interface okio.**{*;}
+
+```
 
 
 

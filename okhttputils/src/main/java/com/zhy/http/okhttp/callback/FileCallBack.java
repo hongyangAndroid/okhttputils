@@ -1,13 +1,13 @@
 package com.zhy.http.okhttp.callback;
 
-import okhttp3.Response;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.utils.L;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import okhttp3.Response;
 
 /**
  * Created by zhy on 15/12/15.
@@ -50,8 +50,6 @@ public abstract class FileCallBack extends Callback<File>
             is = response.body().byteStream();
             final long total = response.body().contentLength();
             long sum = 0;
-
-            L.e(total + "");
 
             File dir = new File(destFileDir);
             if (!dir.exists())

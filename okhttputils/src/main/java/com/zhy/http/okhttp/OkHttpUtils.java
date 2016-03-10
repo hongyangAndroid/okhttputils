@@ -46,7 +46,6 @@ public class OkHttpUtils
             OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
             //cookie enabled
             okHttpClientBuilder.cookieJar(new SimpleCookieJar());
-            mDelivery = new Handler(Looper.getMainLooper());
             okHttpClientBuilder.hostnameVerifier(new HostnameVerifier()
             {
                 @Override
@@ -55,12 +54,19 @@ public class OkHttpUtils
                     return true;
                 }
             });
+
             mOkHttpClient = okHttpClientBuilder.build();
         } else
         {
             mOkHttpClient = okHttpClient;
         }
 
+        init();
+    }
+
+    private void init()
+    {
+        mDelivery = new Handler(Looper.getMainLooper());
     }
 
 
