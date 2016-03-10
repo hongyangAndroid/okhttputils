@@ -2,7 +2,6 @@ package com.zhy.http.okhttp;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.HeadBuilder;
@@ -11,10 +10,14 @@ import com.zhy.http.okhttp.builder.PostFileBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.builder.PostStringBuilder;
 import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.cookie.SimpleCookieJar;
+import com.zhy.http.okhttp.cookie.CookieJarImpl;
+import com.zhy.http.okhttp.cookie.store.CookieStore;
+import com.zhy.http.okhttp.cookie.store.HasCookieStore;
+import com.zhy.http.okhttp.cookie.store.MemoryCookieStore;
 import com.zhy.http.okhttp.https.HttpsUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 import com.zhy.http.okhttp.request.RequestCall;
+import com.zhy.http.okhttp.utils.Exceptions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +28,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.Call;
+import okhttp3.CookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
@@ -45,7 +49,7 @@ public class OkHttpUtils
         {
             OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
             //cookie enabled
-            okHttpClientBuilder.cookieJar(new SimpleCookieJar());
+            okHttpClientBuilder.cookieJar(new CookieJarImpl(new MemoryCookieStore()));
             okHttpClientBuilder.hostnameVerifier(new HostnameVerifier()
             {
                 @Override
@@ -212,6 +216,22 @@ public class OkHttpUtils
         });
     }
 
+    public CookieStore getCookieStore()
+    {
+        final CookieJar cookieJar = mOkHttpClient.cookieJar();
+        if (cookieJar == null)
+        {
+            Exceptions.illegalArgument("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
+        }
+        if (cookieJar instanceof HasCookieStore)
+        {
+            return ((HasCookieStore) cookieJar).getCookieStore();
+        } else
+        {
+            return null;
+        }
+    }
+
 
     public void sendFailResultCallback(final Call call, final Exception e, final Callback callback)
     {
@@ -269,8 +289,6 @@ public class OkHttpUtils
     public void setCertificates(InputStream... certificates)
     {
         SSLSocketFactory sslSocketFactory = HttpsUtils.getSslSocketFactory(certificates, null, null);
-
-        Log.e("TAG", sslSocketFactory + "");
 
         OkHttpClient.Builder builder = getOkHttpClient().newBuilder();
         builder = builder.sslSocketFactory(sslSocketFactory);

@@ -340,6 +340,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void clearSession(View view)
+    {
+        OkHttpUtils.getInstance().getCookieStore().removeAll();
+    }
+
 
     @Override
     protected void onDestroy()

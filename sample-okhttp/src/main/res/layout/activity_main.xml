@@ -78,6 +78,10 @@
                 android:onClick="otherRequestDemo"
                 android:text="otherRequestDemo"/>
 
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:onClick="clearSession"
+                android:text="clearSession"/>
+
     </com.zhy.sample_okhttp.FlowLayout>
 
     <ProgressBar
