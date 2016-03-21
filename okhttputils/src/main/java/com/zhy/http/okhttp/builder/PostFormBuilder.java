@@ -104,5 +104,11 @@ public class PostFormBuilder extends OkHttpRequestBuilder implements HasParamsab
         return this;
     }
 
+    public PostFormBuilder addFiles(String name, Map<String, File> fileMap) {
+        for (String fileName : fileMap.keySet()) {
+            files.add(new FileInput(name, fileName, fileMap.get(fileName)));
+        }
+        return this;
+    }
 
 }
