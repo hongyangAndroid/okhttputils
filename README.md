@@ -16,12 +16,12 @@
 	或者
 	
 	```
-	compile 'com.zhy:okhttputils:2.3.8'
+	compile 'com.zhy:okhttputils:2.3.9'
 	```
 	
 * Eclipse
 	
-	下载最新jar:[okhttputils-2_3_8.jar](okhttputils-2_3_8.jar?raw=true)
+	下载最新jar:[okhttputils-2_3_9.jar](okhttputils-2_3_9.jar?raw=true)
 
 	注：需要同时导入okhttp和okio的jar，下载见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 	

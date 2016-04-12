@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onError(Call call, Exception e)
         {
+            e.printStackTrace();
             mTv.setText("onError:" + e.getMessage());
         }
 
@@ -91,9 +92,11 @@ public class MainActivity extends AppCompatActivity
     public void getHtml(View view)
     {
         String url = "http://sec.mobile.tiancity.com/server/mobilesecurity/version.xml";
+//        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
         OkHttpUtils
                 .get()
                 .url(url)
+//                .addHeader("Accept-Encoding","")
                 .build()
                 .execute(new MyStringCallback());
 
