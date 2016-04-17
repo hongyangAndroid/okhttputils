@@ -153,7 +153,7 @@ public class PersistentCookieStore implements CookieStore
      * @param cookie 要序列化的cookie
      * @return 序列化之后的string
      */
-    protected String encodeCookie(SerializableOkHttpCookies cookie) {
+    protected String encodeCookie(SerializableOkHttpCookie cookie) {
         if (cookie == null)
             return null;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -180,7 +180,7 @@ public class PersistentCookieStore implements CookieStore
         Cookie cookie = null;
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            cookie = ((SerializableOkHttpCookies) objectInputStream.readObject()).getCookies();
+            cookie = ((SerializableOkHttpCookie) objectInputStream.readObject()).getCookies();
         } catch (IOException e) {
             Log.d(LOG_TAG, "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
