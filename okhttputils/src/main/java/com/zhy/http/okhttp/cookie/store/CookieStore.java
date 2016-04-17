@@ -8,7 +8,7 @@ import okhttp3.HttpUrl;
 public interface CookieStore
 {
 
-    public void add(HttpUrl uri, List<Cookie> cookie);
+    public void add(HttpUrl uri, List<Cookie> cookies);
 
     public List<Cookie> get(HttpUrl uri);
 
