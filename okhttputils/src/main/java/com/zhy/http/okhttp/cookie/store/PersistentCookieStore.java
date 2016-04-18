@@ -42,7 +42,7 @@ import okhttp3.HttpUrl;
  */
 public class PersistentCookieStore implements CookieStore
 {
-    private static final String LOG_TAG = "PersistentCookieStore";
+  private static final String LOG_TAG = "PersistentCookieStore";
     private static final String COOKIE_PREFS = "Cookies_Prefs";
 
     private final Map<String, ConcurrentHashMap<String, Cookie>> cookies;
@@ -93,7 +93,7 @@ public class PersistentCookieStore implements CookieStore
         //将cookies持久化到本地
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(url.host(), TextUtils.join(",", cookies.get(url.host()).keySet()));
-        prefsWriter.putString(name, encodeCookie(new SerializableOkHttpCookies(cookie)));
+        prefsWriter.putString(name, encodeCookie(new SerializableHttpCookie(cookie)));
         prefsWriter.apply();
     }
 
@@ -153,7 +153,7 @@ public class PersistentCookieStore implements CookieStore
      * @param cookie 要序列化的cookie
      * @return 序列化之后的string
      */
-    protected String encodeCookie(SerializableOkHttpCookie cookie) {
+    protected String encodeCookie(SerializableHttpCookie cookie) {
         if (cookie == null)
             return null;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -180,7 +180,7 @@ public class PersistentCookieStore implements CookieStore
         Cookie cookie = null;
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            cookie = ((SerializableOkHttpCookie) objectInputStream.readObject()).getCookies();
+            cookie = ((SerializableHttpCookie) objectInputStream.readObject()).getCookies();
         } catch (IOException e) {
             Log.d(LOG_TAG, "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
