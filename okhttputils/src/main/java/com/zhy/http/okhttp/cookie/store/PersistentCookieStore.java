@@ -86,7 +86,7 @@ public class PersistentCookieStore implements CookieStore
         }
     }
 
-    protected void add(HttpUrl uri, Cookie cookie)
+    protected  void add(HttpUrl uri, Cookie cookie)
     {
         String name = getCookieToken(cookie);
 
@@ -118,7 +118,7 @@ public class PersistentCookieStore implements CookieStore
     }
 
     @Override
-    public List<Cookie> get(HttpUrl uri)
+    public  List<Cookie> get(HttpUrl uri)
     {
         ArrayList<Cookie> ret = new ArrayList<Cookie>();
         if (cookies.containsKey(uri.host()))
@@ -145,7 +145,7 @@ public class PersistentCookieStore implements CookieStore
     }
 
     @Override
-    public boolean removeAll()
+    public  boolean removeAll()
     {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.clear();
@@ -156,7 +156,7 @@ public class PersistentCookieStore implements CookieStore
 
 
     @Override
-    public boolean remove(HttpUrl uri, Cookie cookie)
+    public  boolean remove(HttpUrl uri, Cookie cookie)
     {
         String name = getCookieToken(cookie);
 
@@ -180,7 +180,7 @@ public class PersistentCookieStore implements CookieStore
     }
 
     @Override
-    public List<Cookie> getCookies()
+    public  List<Cookie> getCookies()
     {
         ArrayList<Cookie> ret = new ArrayList<Cookie>();
         for (String key : cookies.keySet())

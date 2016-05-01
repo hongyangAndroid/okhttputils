@@ -44,8 +44,6 @@ public class LoggerInterceptor implements Interceptor
         Request request = chain.request();
         logForRequest(request);
         Response response = chain.proceed(request);
-
-
         return logForResponse(response);
     }
 

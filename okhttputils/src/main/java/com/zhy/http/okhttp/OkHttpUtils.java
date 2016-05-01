@@ -187,21 +187,20 @@ public class OkHttpUtils
             {
                 sendFailResultCallback(call, e, finalCallback);
             }
-
             @Override
             public void onResponse(final Call call, final Response response)
             {
-                if (response.code() >= 400 && response.code() <= 599)
-                {
-                    try
-                    {
-                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    return;
-                }
+//                if (response.code() >= 400 && response.code() <= 599)
+//                {
+//                    try
+//                    {
+//                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
+//                    } catch (IOException e)
+//                    {
+//                        e.printStackTrace();
+//                    }
+//                    return;
+//                }
 
                 try
                 {
@@ -210,6 +209,7 @@ public class OkHttpUtils
                 } catch (Exception e)
                 {
                     sendFailResultCallback(call, e, finalCallback);
+
                 }
 
             }

@@ -22,6 +22,15 @@ public class PostFormBuilder extends OkHttpRequestBuilder implements HasParamsab
         return new PostFormRequest(url, tag, params, headers, files).build();
     }
 
+    public PostFormBuilder files(String key, Map<String, File> files)
+    {
+        for (String filename : files.keySet())
+        {
+            this.files.add(new FileInput(key, filename, files.get(filename)));
+        }
+        return this;
+    }
+
     public PostFormBuilder addFile(String name, String filename, File file)
     {
         files.add(new FileInput(name, filename, file));
@@ -104,11 +113,5 @@ public class PostFormBuilder extends OkHttpRequestBuilder implements HasParamsab
         return this;
     }
 
-    public PostFormBuilder addFiles(String name, Map<String, File> fileMap) {
-        for (String fileName : fileMap.keySet()) {
-            files.add(new FileInput(name, fileName, fileMap.get(fileName)));
-        }
-        return this;
-    }
 
 }

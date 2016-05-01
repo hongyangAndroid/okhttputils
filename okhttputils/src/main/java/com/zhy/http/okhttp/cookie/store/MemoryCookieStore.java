@@ -2,6 +2,7 @@ package com.zhy.http.okhttp.cookie.store;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -19,22 +20,22 @@ public class MemoryCookieStore implements CookieStore
     public void add(HttpUrl url, List<Cookie> cookies)
     {
         List<Cookie> oldCookies = allCookies.get(url.host());
-        List<Cookie> needRemove = new ArrayList<>();
 
-        for (Cookie newCookie : cookies)
+        Iterator<Cookie> itNew = cookies.iterator();
+        Iterator<Cookie> itOld = oldCookies.iterator();
+        while (itNew.hasNext())
         {
-            for (Cookie oldCookie : oldCookies)
+            String va = itNew.next().name();
+            while (va != null && itOld.hasNext())
             {
-                if (newCookie.name().equals(oldCookie.name()))
+                String v = itOld.next().name();
+                if (v != null && va.equals(v))
                 {
-                    needRemove.add(oldCookie);
+                    itOld.remove();
                 }
             }
         }
-        oldCookies.removeAll(needRemove);
         oldCookies.addAll(cookies);
-
-
     }
 
     @Override

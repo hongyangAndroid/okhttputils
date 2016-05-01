@@ -4,7 +4,10 @@ import android.app.Application;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import okio.Buffer;
 
 /**
  * Created by zhy on 15/8/25.
@@ -31,13 +34,15 @@ public class MyApplication extends Application
     {
         super.onCreate();
         //这里可以设置自签名证书
-//        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
-//                new Buffer()
-//                        .writeUtf8(CER_12306)
-//                        .inputStream()});
+        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
+                new Buffer()
+                        .writeUtf8(CER_12306)
+                        .inputStream()});
         OkHttpUtils.getInstance().debug("OkHttpUtils").setConnectTimeout(100000, TimeUnit.MILLISECONDS);
         //使用https，但是默认信任全部证书
-        OkHttpUtils.getInstance().setCertificates();
+//        OkHttpUtils.getInstance().setCertificates();
+
+
 
 
         //使用这种方式，设置多个OkHttpClient参数

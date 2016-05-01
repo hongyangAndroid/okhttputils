@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onResponse(String response)
         {
+            Log.e("TAG","onResponse：complete");
             mTv.setText("onResponse:" + response);
         }
 
@@ -221,6 +222,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Bitmap bitmap)
                     {
+                        Log.e("TAG","onResponse：complete");
                         mImageView.setImageBitmap(bitmap);
                     }
                 });
@@ -259,7 +261,7 @@ public class MainActivity extends AppCompatActivity
     public void multiFileUpload(View view)
     {
         File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
-        File file2 = new File(Environment.getExternalStorageDirectory(), "test1.txt");
+        File file2 = new File(Environment.getExternalStorageDirectory(), "test1#.txt");
         if (!file.exists())
         {
             Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
@@ -353,6 +355,6 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-//        OkHttpUtils.cancelTag(this);
+        OkHttpUtils.getInstance().cancelTag(this);
     }
 }
