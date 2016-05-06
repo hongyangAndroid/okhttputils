@@ -1,5 +1,7 @@
 package com.zhy.http.okhttp.builder;
 
+import android.net.Uri;
+
 import com.zhy.http.okhttp.request.GetRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
