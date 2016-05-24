@@ -1,5 +1,7 @@
 package com.zhy.http.okhttp.builder;
 
+import android.net.Uri;
+
 import com.zhy.http.okhttp.request.GetRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
@@ -24,18 +26,19 @@ public class GetBuilder extends OkHttpRequestBuilder implements HasParamsable
 
     protected String appendParams(String url, Map<String, String> params)
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append(url + "?");
-        if (params != null && !params.isEmpty())
+       if (url == null || params == null || params.isEmpty())
+       {
+            return url;
+       }
+        Uri.Builder builder = Uri.parse(url).buildUpon();
+        Set<String> keys = params.keySet();
+        Iterator<String> iterator = keys.iterator();
+        while (iterator.hasNext())
         {
-            for (String key : params.keySet())
-            {
-                sb.append(key).append("=").append(params.get(key)).append("&");
-            }
+            String key = iterator.next();
+            builder.appendQueryParameter(key, params.get(key));
         }
-
-        sb = sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        return builder.build().toString();
     }
 
     @Override
