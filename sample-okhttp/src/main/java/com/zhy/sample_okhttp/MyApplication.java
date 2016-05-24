@@ -2,12 +2,14 @@ package com.zhy.sample_okhttp;
 
 import android.app.Application;
 
-import com.zhy.http.okhttp.OkHttpClientManager;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.cookie.CookieJarImpl;
+import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
+import com.zhy.http.okhttp.https.HttpsUtils;
 
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
-import okio.Buffer;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by zhy on 15/8/25.
@@ -29,16 +31,24 @@ public class MyApplication extends Application
             "og555S+C3eJAAVeNCTeMS3N/M5hzBRJAoffn3qoYdAO1Q8bTguOi+2849A==\n" +
             "-----END CERTIFICATE-----";
 
+
     @Override
     public void onCreate()
     {
         super.onCreate();
-        OkHttpClientManager.getInstance().setCertificates(new InputStream[]{
-                new Buffer()
-                        .writeUtf8(CER_12306)
-                        .inputStream()});
-        OkHttpClientManager.getInstance().getOkHttpClient().setConnectTimeout(100000, TimeUnit.MILLISECONDS);
 
+//        ClearableCookieJar cookieJar1 = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
+
+
+        CookieJarImpl cookieJar1 = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+//                .addInterceptor(new LoggerInterceptor("TAG"))
+                .cookieJar(cookieJar1)
+                .sslSocketFactory(HttpsUtils.getSslSocketFactory(null, null, null))
+                .build();
+        OkHttpUtils.initClient(okHttpClient);
 
     }
 }

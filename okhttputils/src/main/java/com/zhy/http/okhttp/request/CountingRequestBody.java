@@ -1,7 +1,7 @@
 package com.zhy.http.okhttp.request;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 import java.io.IOException;
 
@@ -54,10 +54,9 @@ public class CountingRequestBody extends RequestBody
     @Override
     public void writeTo(BufferedSink sink) throws IOException
     {
-        BufferedSink bufferedSink;
 
         countingSink = new CountingSink(sink);
-        bufferedSink = Okio.buffer(countingSink);
+        BufferedSink bufferedSink = Okio.buffer(countingSink);
 
         delegate.writeTo(bufferedSink);
 
@@ -87,9 +86,7 @@ public class CountingRequestBody extends RequestBody
 
     public static interface Listener
     {
-
         public void onRequestProgress(long bytesWritten, long contentLength);
-
     }
 
 }

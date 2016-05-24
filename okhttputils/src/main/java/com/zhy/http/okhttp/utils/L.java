@@ -1,4 +1,4 @@
-package com.zhy.http.okhttp;
+package com.zhy.http.okhttp.utils;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class L
 {
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     public static void e(String msg)
     {
