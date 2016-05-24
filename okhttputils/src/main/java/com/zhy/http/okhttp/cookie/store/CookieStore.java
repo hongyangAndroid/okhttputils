@@ -8,15 +8,14 @@ import okhttp3.HttpUrl;
 public interface CookieStore
 {
 
-    public  void add(HttpUrl uri, List<Cookie> cookie);
+    void add(HttpUrl uri, List<Cookie> cookie);
 
-    public  List<Cookie> get(HttpUrl uri);
+    List<Cookie> get(HttpUrl uri);
 
-    public  List<Cookie> getCookies();
+    List<Cookie> getCookies();
 
-    public  boolean remove(HttpUrl uri, Cookie cookie);
+    boolean remove(HttpUrl uri, Cookie cookie);
 
-    public boolean removeAll();
-
+    boolean removeAll();
 
 }

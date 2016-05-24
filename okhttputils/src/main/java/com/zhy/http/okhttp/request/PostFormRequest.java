@@ -65,7 +65,7 @@ public class PostFormRequest extends OkHttpRequest
             public void onRequestProgress(final long bytesWritten, final long contentLength)
             {
 
-                OkHttpUtils.getInstance().getDelivery().post(new Runnable()
+                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
                     public void run()

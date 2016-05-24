@@ -1,7 +1,6 @@
 package com.zhy.http.okhttp.cookie;
 
 import com.zhy.http.okhttp.cookie.store.CookieStore;
-import com.zhy.http.okhttp.cookie.store.HasCookieStore;
 import com.zhy.http.okhttp.utils.Exceptions;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import okhttp3.HttpUrl;
 /**
  * Created by zhy on 16/3/10.
  */
-public class CookieJarImpl implements CookieJar, HasCookieStore
+public class CookieJarImpl implements CookieJar
 {
     private CookieStore cookieStore;
 
@@ -35,7 +34,6 @@ public class CookieJarImpl implements CookieJar, HasCookieStore
         return cookieStore.get(url);
     }
 
-    @Override
     public CookieStore getCookieStore()
     {
         return cookieStore;

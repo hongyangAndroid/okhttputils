@@ -1,8 +1,5 @@
 package com.zhy.http.okhttp;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.HeadBuilder;
 import com.zhy.http.okhttp.builder.OtherRequestBuilder;
@@ -10,25 +7,13 @@ import com.zhy.http.okhttp.builder.PostFileBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.builder.PostStringBuilder;
 import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.cookie.CookieJarImpl;
-import com.zhy.http.okhttp.cookie.store.CookieStore;
-import com.zhy.http.okhttp.cookie.store.HasCookieStore;
-import com.zhy.http.okhttp.cookie.store.MemoryCookieStore;
-import com.zhy.http.okhttp.https.HttpsUtils;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
 import com.zhy.http.okhttp.request.RequestCall;
-import com.zhy.http.okhttp.utils.Exceptions;
+import com.zhy.http.okhttp.utils.Platform;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
+import java.util.concurrent.Executor;
 
 import okhttp3.Call;
-import okhttp3.CookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
@@ -37,63 +22,26 @@ import okhttp3.Response;
  */
 public class OkHttpUtils
 {
-
-    public static final long DEFAULT_MILLISECONDS = 10000;
+    public static final long DEFAULT_MILLISECONDS = 10_000L;
     private static OkHttpUtils mInstance;
     private OkHttpClient mOkHttpClient;
-    private Handler mDelivery;
+    private Platform mPlatform;
 
     public OkHttpUtils(OkHttpClient okHttpClient)
     {
         if (okHttpClient == null)
         {
-            OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-            //cookie enabled
-            okHttpClientBuilder.cookieJar(new CookieJarImpl(new MemoryCookieStore()));
-            okHttpClientBuilder.hostnameVerifier(new HostnameVerifier()
-            {
-                @Override
-                public boolean verify(String hostname, SSLSession session)
-                {
-                    return true;
-                }
-            });
-
-            mOkHttpClient = okHttpClientBuilder.build();
+            mOkHttpClient = new OkHttpClient();
         } else
         {
             mOkHttpClient = okHttpClient;
         }
 
-        init();
-    }
-
-    private void init()
-    {
-        mDelivery = new Handler(Looper.getMainLooper());
+        mPlatform = Platform.get();
     }
 
 
-    public OkHttpUtils debug(String tag)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(new LoggerInterceptor(tag, false)).build();
-        return this;
-    }
-
-    /**
-     * showResponse may cause error, but you can try .
-     *
-     * @param tag
-     * @param showResponse
-     * @return
-     */
-    public OkHttpUtils debug(String tag, boolean showResponse)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder().addInterceptor(new LoggerInterceptor(tag, showResponse)).build();
-        return this;
-    }
-
-    public static OkHttpUtils getInstance(OkHttpClient okHttpClient)
+    public static OkHttpUtils initClient(OkHttpClient okHttpClient)
     {
         if (mInstance == null)
         {
@@ -110,23 +58,13 @@ public class OkHttpUtils
 
     public static OkHttpUtils getInstance()
     {
-        if (mInstance == null)
-        {
-            synchronized (OkHttpUtils.class)
-            {
-                if (mInstance == null)
-                {
-                    mInstance = new OkHttpUtils(null);
-                }
-            }
-        }
-        return mInstance;
+        return initClient(null);
     }
 
 
-    public Handler getDelivery()
+    public Executor getDelivery()
     {
-        return mDelivery;
+        return mPlatform.defaultCallbackExecutor();
     }
 
     public OkHttpClient getOkHttpClient()
@@ -190,17 +128,17 @@ public class OkHttpUtils
             @Override
             public void onResponse(final Call call, final Response response)
             {
-//                if (response.code() >= 400 && response.code() <= 599)
-//                {
-//                    try
-//                    {
-//                        sendFailResultCallback(call, new RuntimeException(response.body().string()), finalCallback);
-//                    } catch (IOException e)
-//                    {
-//                        e.printStackTrace();
-//                    }
-//                    return;
-//                }
+                if (call.isCanceled())
+                {
+                    sendFailResultCallback(call, new IOException("Canceled!"), finalCallback);
+                    return;
+                }
+
+                if (!finalCallback.validateReponse(response))
+                {
+                    sendFailResultCallback(call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback);
+                    return;
+                }
 
                 try
                 {
@@ -216,28 +154,12 @@ public class OkHttpUtils
         });
     }
 
-    public CookieStore getCookieStore()
-    {
-        final CookieJar cookieJar = mOkHttpClient.cookieJar();
-        if (cookieJar == null)
-        {
-            Exceptions.illegalArgument("you should invoked okHttpClientBuilder.cookieJar() to set a cookieJar.");
-        }
-        if (cookieJar instanceof HasCookieStore)
-        {
-            return ((HasCookieStore) cookieJar).getCookieStore();
-        } else
-        {
-            return null;
-        }
-    }
-
 
     public void sendFailResultCallback(final Call call, final Exception e, final Callback callback)
     {
         if (callback == null) return;
 
-        mDelivery.post(new Runnable()
+        mPlatform.execute(new Runnable()
         {
             @Override
             public void run()
@@ -251,7 +173,7 @@ public class OkHttpUtils
     public void sendSuccessResultCallback(final Object object, final Callback callback)
     {
         if (callback == null) return;
-        mDelivery.post(new Runnable()
+        mPlatform.execute(new Runnable()
         {
             @Override
             public void run()
@@ -279,66 +201,6 @@ public class OkHttpUtils
             }
         }
     }
-
-
-    /**
-     * for https-way authentication
-     *
-     * @param certificates
-     */
-    public void setCertificates(InputStream... certificates)
-    {
-        SSLSocketFactory sslSocketFactory = HttpsUtils.getSslSocketFactory(certificates, null, null);
-
-        OkHttpClient.Builder builder = getOkHttpClient().newBuilder();
-        builder = builder.sslSocketFactory(sslSocketFactory);
-        mOkHttpClient = builder.build();
-
-
-    }
-
-    /**
-     * for https mutual authentication
-     *
-     * @param certificates
-     * @param bksFile
-     * @param password
-     */
-    public void setCertificates(InputStream[] certificates, InputStream bksFile, String password)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .sslSocketFactory(HttpsUtils.getSslSocketFactory(certificates, bksFile, password))
-                .build();
-    }
-
-    public void setHostNameVerifier(HostnameVerifier hostNameVerifier)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .hostnameVerifier(hostNameVerifier)
-                .build();
-    }
-
-    public void setConnectTimeout(int timeout, TimeUnit units)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .connectTimeout(timeout, units)
-                .build();
-    }
-
-    public void setReadTimeout(int timeout, TimeUnit units)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .readTimeout(timeout, units)
-                .build();
-    }
-
-    public void setWriteTimeout(int timeout, TimeUnit units)
-    {
-        mOkHttpClient = getOkHttpClient().newBuilder()
-                .writeTimeout(timeout, units)
-                .build();
-    }
-
 
     public static class METHOD
     {

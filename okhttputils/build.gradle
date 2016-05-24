@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "2.4.1"
+version = "2.5.1"
 
 android {
     compileSdkVersion 23
@@ -110,10 +110,6 @@ def makeJar(String target,String classDir){
     }
 }
 
-//新建一个task,名为buildLib,依赖build(build是一个自带的task)
-task buildLib(dependsOn:['build'])<< {
-    makeJar("../okhttputils-2_3_1.jar","build/intermediates/classes/release")
-}
 
 task clearJar(type: Delete) {
     delete 'build/outputs/okhttputils.jar'
@@ -123,7 +119,7 @@ task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
     into('build/outputs/')
     include('classes.jar')
-    rename ('classes.jar', 'okhttputils-2_4_1.jar')
+    rename ('classes.jar', 'okhttputils-2_5_1.jar')
 }
 
 makeJar.dependsOn(clearJar, build)

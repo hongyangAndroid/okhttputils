@@ -15,7 +15,6 @@ public class GetRequest extends OkHttpRequest
         super(url, tag, params, headers);
     }
 
-
     @Override
     protected RequestBody buildRequestBody()
     {

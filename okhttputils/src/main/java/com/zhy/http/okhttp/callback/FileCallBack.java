@@ -49,6 +49,7 @@ public abstract class FileCallBack extends Callback<File>
         {
             is = response.body().byteStream();
             final long total = response.body().contentLength();
+
             long sum = 0;
 
             File dir = new File(destFileDir);
@@ -63,7 +64,7 @@ public abstract class FileCallBack extends Callback<File>
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
-                OkHttpUtils.getInstance().getDelivery().post(new Runnable()
+                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
                     public void run()

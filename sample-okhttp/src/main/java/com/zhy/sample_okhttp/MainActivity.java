@@ -16,6 +16,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
+import com.zhy.http.okhttp.cookie.CookieJarImpl;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,14 +24,14 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.CookieJar;
 import okhttp3.MediaType;
 import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity
 {
 
-
-    private String mBaseUrl = "http://192.168.1.102:8080/okHttpServer/";
+    private String mBaseUrl = "http://192.168.56.1:8080/okHttpServer/";
 
     private static final String TAG = "MainActivity";
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onResponse(String response)
         {
-            Log.e("TAG","onResponse：complete");
+            Log.e(TAG, "onResponse：complete");
             mTv.setText("onResponse:" + response);
         }
 
@@ -81,8 +82,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mTv = (TextView) findViewById(R.id.id_textview);
         mImageView = (ImageView) findViewById(R.id.id_imageview);
@@ -131,6 +135,7 @@ public class MainActivity extends AppCompatActivity
                 .file(file)
                 .build()
                 .execute(new MyStringCallback());
+
 
     }
 
@@ -222,7 +227,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Bitmap bitmap)
                     {
-                        Log.e("TAG","onResponse：complete");
+                        Log.e("TAG", "onResponse：complete");
                         mImageView.setImageBitmap(bitmap);
                     }
                 });
@@ -284,7 +289,7 @@ public class MainActivity extends AppCompatActivity
 
     public void downloadFile(View view)
     {
-        String url = "https://github.com/hongyangAndroid/okhttp-utils/blob/master/gson-2.2.1.jar?raw=true";
+        String url = "https://github.com/hongyangAndroid/okhttp-utils/blob/master/okhttputils-2_4_1.jar?raw=true";
         OkHttpUtils//
                 .get()//
                 .url(url)//
@@ -302,6 +307,7 @@ public class MainActivity extends AppCompatActivity
                     public void inProgress(float progress, long total)
                     {
                         mProgressBar.setProgress((int) (100 * progress));
+                        Log.e(TAG, "inProgress :" + (int) (100 * progress));
                     }
 
                     @Override
@@ -347,7 +353,11 @@ public class MainActivity extends AppCompatActivity
 
     public void clearSession(View view)
     {
-        OkHttpUtils.getInstance().getCookieStore().removeAll();
+        CookieJar cookieJar = OkHttpUtils.getInstance().getOkHttpClient().cookieJar();
+        if (cookieJar instanceof CookieJarImpl)
+        {
+            ((CookieJarImpl)cookieJar).getCookieStore().removeAll();
+        }
     }
 
 
