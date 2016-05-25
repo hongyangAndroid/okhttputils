@@ -8,12 +8,12 @@
 * Android Studio
 	
 	```
-	compile 'com.zhy:okhttputils:2.5.1'
+	compile 'com.zhy:okhttputils:2.5.2'
 	```
 	
 * Eclipse
 	
-	下载最新jar:[okhttputils-2\_5\_1.jar](okhttputils-2_5_1.jar?raw=true)
+	下载最新jar:[okhttputils-2\_5\_2.jar](okhttputils-2_5_2.jar?raw=true)
 
 	注：需要同时导入okhttp和okio的jar，下载见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 	

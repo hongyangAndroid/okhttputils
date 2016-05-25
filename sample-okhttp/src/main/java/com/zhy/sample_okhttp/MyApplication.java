@@ -6,6 +6,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
 import com.zhy.http.okhttp.https.HttpsUtils;
+import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -44,8 +45,8 @@ public class MyApplication extends Application
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
-//                .addInterceptor(new LoggerInterceptor("TAG"))
-                .cookieJar(cookieJar1)
+                .addInterceptor(new LoggerInterceptor("TAG"))
+//                .cookieJar(cookieJar1)
                 .sslSocketFactory(HttpsUtils.getSslSocketFactory(null, null, null))
                 .build();
         OkHttpUtils.initClient(okHttpClient);

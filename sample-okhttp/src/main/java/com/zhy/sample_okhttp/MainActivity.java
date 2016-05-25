@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
 
     public void getHtml(View view)
     {
-        String url = "http://sec.mobile.tiancity.com/server/mobilesecurity/version.xml";
+        String url = "http://www.baidu.com";
 //        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
         OkHttpUtils
                 .get()

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "2.5.1"
+version = "2.5.2"
 
 android {
     compileSdkVersion 23
@@ -119,7 +119,7 @@ task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
     into('build/outputs/')
     include('classes.jar')
-    rename ('classes.jar', 'okhttputils-2_5_1.jar')
+    rename ('classes.jar', 'okhttputils-2_5_2.jar')
 }
 
 makeJar.dependsOn(clearJar, build)
