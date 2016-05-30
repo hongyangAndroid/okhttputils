@@ -23,7 +23,7 @@ import okhttp3.Response;
 public class OkHttpUtils
 {
     public static final long DEFAULT_MILLISECONDS = 10_000L;
-    private static OkHttpUtils mInstance;
+    private volatile static OkHttpUtils mInstance;
     private OkHttpClient mOkHttpClient;
     private Platform mPlatform;
 
