@@ -10,7 +10,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/okhttp3-persistent-cookiejar" />
             <option value="$PROJECT_DIR$/okhttputils" />
             <option value="$PROJECT_DIR$/sample-okhttp" />
           </set>
@@ -18,7 +17,6 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/okhttp3-persistent-cookiejar" />
             <option value="$PROJECT_DIR$/okhttputils" />
             <option value="$PROJECT_DIR$/sample-okhttp" />
           </set>
