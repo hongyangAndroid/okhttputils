@@ -1,21 +1,27 @@
 package com.zhy.sample_okhttp;
 
 import android.app.Application;
+import android.os.Environment;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 import com.zhy.http.okhttp.cookie.store.MemoryCookieStore;
 import com.zhy.http.okhttp.https.HttpsUtils;
+import com.zhy.http.okhttp.log.LoggerInterceptor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 /**
  * Created by zhy on 15/8/25.
  */
-public class MyApplication extends Application
-{
+public class MyApplication extends Application {
     private String CER_12306 = "-----BEGIN CERTIFICATE-----\n" +
             "MIICmjCCAgOgAwIBAgIIbyZr5/jKH6QwDQYJKoZIhvcNAQEFBQAwRzELMAkGA1UEBhMCQ04xKTAn\n" +
             "BgNVBAoTIFNpbm9yYWlsIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MQ0wCwYDVQQDEwRTUkNBMB4X\n" +
@@ -32,10 +38,28 @@ public class MyApplication extends Application
             "-----END CERTIFICATE-----";
 
 
+    /**
+     * Dangerous interceptor that rewrites the server's cache-control header.
+     */
+    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+        @Override
+        public Response intercept(Interceptor.Chain chain) throws IOException {
+            Response originalResponse = chain.proceed(chain.request());
+            return originalResponse.newBuilder()
+                    .header("Cache-Control", "max-age=15")
+                    .build();
+        }
+    };
+
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        File cacheDir = new File(Environment.getExternalStorageDirectory() + "/OkHttp");
+        if (!cacheDir.exists()) {
+            cacheDir.mkdir();
+        }
+        Cache cache = new Cache(cacheDir, cacheSize);
 
 //        ClearableCookieJar cookieJar1 = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
 
@@ -45,7 +69,10 @@ public class MyApplication extends Application
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
-//                .addInterceptor(new LoggerInterceptor("TAG"))
+                .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                .addInterceptor(new LoggerInterceptor("TAG"))
+                .cache(cache)
                 .cookieJar(cookieJar1)
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .build();
