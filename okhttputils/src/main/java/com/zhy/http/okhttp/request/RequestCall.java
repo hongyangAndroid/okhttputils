@@ -6,6 +6,7 @@ import com.zhy.http.okhttp.callback.Callback;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,6 +25,7 @@ public class RequestCall
     private long readTimeOut;
     private long writeTimeOut;
     private long connTimeOut;
+    private CacheControl cacheControl;
 
     private OkHttpClient clone;
 
@@ -50,9 +52,20 @@ public class RequestCall
         return this;
     }
 
+    public RequestCall cacheControl(CacheControl cacheControl)
+    {
+        this.cacheControl = cacheControl;
+        return this;
+    }
+
     public Call buildCall(Callback callback)
     {
         request = generateRequest(callback);
+
+        if (null != cacheControl)
+        {
+            request = request.newBuilder().cacheControl(cacheControl).build();
+        }
 
         if (readTimeOut > 0 || writeTimeOut > 0 || connTimeOut > 0)
         {
