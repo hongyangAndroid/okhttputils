@@ -10,11 +10,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import okhttp3.CacheControl;
+
 /**
  * Created by zhy on 15/12/14.
  */
 public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasParamsable
 {
+    private CacheControl cacheControl;
+
     @Override
     public RequestCall build()
     {
@@ -23,7 +27,7 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
             url = appendParams(url, params);
         }
 
-        return new GetRequest(url, tag, params, headers,id).build();
+        return new GetRequest(url, tag, params, headers, id, cacheControl).build();
     }
 
     protected String appendParams(String url, Map<String, String> params)
@@ -41,6 +45,12 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
             builder.appendQueryParameter(key, params.get(key));
         }
         return builder.build().toString();
+    }
+
+    public GetBuilder cacheControl(CacheControl cacheControl)
+    {
+        this.cacheControl = cacheControl;
+        return this;
     }
 
 

@@ -2,6 +2,7 @@ package com.zhy.http.okhttp.request;
 
 import java.util.Map;
 
+import okhttp3.CacheControl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -10,9 +11,12 @@ import okhttp3.RequestBody;
  */
 public class GetRequest extends OkHttpRequest
 {
-    public GetRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers,int id)
+    private CacheControl cacheControl;
+
+    public GetRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, int id, CacheControl cacheControl)
     {
         super(url, tag, params, headers,id);
+        this.cacheControl = cacheControl;
     }
 
     @Override
@@ -24,7 +28,13 @@ public class GetRequest extends OkHttpRequest
     @Override
     protected Request buildRequest(RequestBody requestBody)
     {
-        return builder.get().build();
+        if (null == cacheControl)
+        {
+            return builder.get().build();
+        } else
+        {
+            return builder.get().cacheControl(cacheControl).build();
+        }
     }
 
 
