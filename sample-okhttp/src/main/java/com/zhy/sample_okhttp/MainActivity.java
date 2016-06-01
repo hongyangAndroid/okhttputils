@@ -11,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -19,19 +18,24 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.CookieJar;
-import okhttp3.MediaType;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
 
     private String mBaseUrl = "http://192.168.56.1:8080/okHttpServer/";
+    //    private String mGetUrl = "http://news-at.zhihu.com/api/4/news/latest";
+    private String mGetUrl = "http://news-at.zhihu.com/api/4/themes";
 
     private static final String TAG = "MainActivity";
 
@@ -40,39 +44,42 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mProgressBar;
 
 
-    public class MyStringCallback extends StringCallback
-    {
+    public class MyStringCallback extends StringCallback {
+
         @Override
-        public void onBefore(Request request)
-        {
+        public String parseNetworkResponse(Response response) throws IOException {
+            Log.d("cache", "" + response.cacheResponse());
+            Log.d("network", "" + response.networkResponse());
+
+            return super.parseNetworkResponse(response);
+        }
+
+        @Override
+        public void onBefore(Request request) {
             super.onBefore(request);
             setTitle("loading...");
         }
 
         @Override
-        public void onAfter()
-        {
+        public void onAfter() {
             super.onAfter();
             setTitle("Sample-okHttp");
         }
 
         @Override
-        public void onError(Call call, Exception e)
-        {
+        public void onError(Call call, Exception e) {
             e.printStackTrace();
             mTv.setText("onError:" + e.getMessage());
         }
 
         @Override
-        public void onResponse(String response)
-        {
+        public void onResponse(String response) {
             Log.e(TAG, "onResponse：complete");
             mTv.setText("onResponse:" + response);
         }
 
         @Override
-        public void inProgress(float progress)
-        {
+        public void inProgress(float progress) {
             Log.e(TAG, "inProgress:" + progress);
             mProgressBar.setProgress((int) (100 * progress));
         }
@@ -80,8 +87,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
@@ -94,106 +100,119 @@ public class MainActivity extends AppCompatActivity
         mProgressBar.setMax(100);
     }
 
-    public void getHtml(View view)
-    {
-        String url = "http://www.baidu.com";
-//        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
+    public void getHtml(View view) {
+        OkHttpUtils
+                .get()
+                .url(mGetUrl)
+                .build()
+                .execute(new MyStringCallback());
+
+    }
+
+    public void getUser(View view) {
+//        String url = mBaseUrl + "user!getUser";
+//        OkHttpUtils
+//                .getUser()
+//                .url(url)
+//                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+//                .content(new Gson().toJson(new User("zhy", "123")))
+//                .build()
+//                .execute(new MyStringCallback());
+        //        String url = "http://www.baidu.com";
+        String url = "http://123.123.123.123:8080/tlyht/user/info";
         OkHttpUtils
                 .get()
                 .url(url)
-//                .addHeader("Accept-Encoding","")
+                .addHeader("Accept", "application/json")
                 .build()
+//                .cacheControl(CacheControl.FORCE_NETWORK)
                 .execute(new MyStringCallback());
 
     }
 
-    public void postString(View view)
-    {
-        String url = mBaseUrl + "user!postString";
-        OkHttpUtils
-                .postString()
-                .url(url)
-                .mediaType(MediaType.parse("application/json; charset=utf-8"))
-                .content(new Gson().toJson(new User("zhy", "123")))
-                .build()
-                .execute(new MyStringCallback());
-
-    }
-
-    public void postFile(View view)
-    {
-        File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
-        if (!file.exists())
-        {
-            Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
-            return;
+    public void delete(View view) {
+//        File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
+//        if (!file.exists()) {
+//            Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        String url = mBaseUrl + "user!delete";
+//        OkHttpUtils
+//                .delete()
+//                .url(url)
+//                .file(file)
+//                .build()
+//                .execute(new MyStringCallback());
+        try {
+            OkHttpUtils.getInstance().getOkHttpClient().cache().delete();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        String url = mBaseUrl + "user!postFile";
-        OkHttpUtils
-                .postFile()
-                .url(url)
-                .file(file)
-                .build()
-                .execute(new MyStringCallback());
 
 
     }
 
-    public void getUser(View view)
-    {
-        String url = mBaseUrl + "user!getUser";
-        OkHttpUtils
-                .post()//
-                .url(url)//
-                .addParams("username", "hyman")//
-                .addParams("password", "123")//
-                .build()//
-                .execute(new UserCallback()
-                {
-                    @Override
-                    public void onError(Call call, Exception e)
-                    {
-                        mTv.setText("onError:" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(User response)
-                    {
-                        mTv.setText("onResponse:" + response.username);
-                    }
-                });
-    }
-
-
-    public void getUsers(View view)
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("name", "zhy");
-        String url = mBaseUrl + "user!getUsers";
+    public void login(View view) {
+        String url = "http://123.123.123.123:8080/tlyht/user/login";
         OkHttpUtils//
                 .post()//
                 .url(url)//
-//                .params(params)//
+                .addHeader("Accept", "application/json")
+                .addParams("phone", "13026100183")//
+                .addParams("password", "23456")//
                 .build()//
-                .execute(new ListUserCallback()//
-                {
-                    @Override
-                    public void onError(Call call, Exception e)
-                    {
-                        mTv.setText("onError:" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(List<User> response)
-                    {
-                        mTv.setText("onResponse:" + response);
-                    }
-                });
+                .execute(new MyStringCallback());
     }
 
 
-    public void getHttpsHtml(View view)
-    {
+    public void getMac(View view) {
+        String url = "http://123.123.123.123:8080/tlyht/user/findDeviceValue";
+        OkHttpUtils
+                .post()//
+                .url(url)//
+                .addHeader("Accept", "application/json")
+//                .addHeader("Cache-Control", "max-age=15")
+                .addParams("mac", "16:05:00:00:68:D4")//
+                .build()//
+                .execute(new MyStringCallback());
+    }
+
+    public void postOutThis(View view) {
+//        String url = "http://123.123.123.123:8080/tlyht/user/findDeviceValue";
+        String url = "http://123.123.123.123:8080/tlyht/user/info";
+        OkHttpClient client = OkHttpUtils.getInstance().getOkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("mac", "16:05:00:00:68:D4")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("contentType", "application/x-www-form-urlencoded")
+//                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("cache", "" + response.cacheResponse());
+                    Log.d("network", "" + response.networkResponse());
+                    Log.d("response", "" + response.body().string());
+                }
+            }
+        });
+
+
+    }
+
+
+    public void getHttpsHtml(View view) {
         String url = "https://kyfw.12306.cn/otn/";
 
         OkHttpUtils
@@ -204,8 +223,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void getImage(View view)
-    {
+    public void getImage(View view) {
         mTv.setText("");
         String url = "http://images.csdn.net/20150817/1.jpg";
         OkHttpUtils
@@ -216,17 +234,14 @@ public class MainActivity extends AppCompatActivity
                 .connTimeOut(20000)
                 .readTimeOut(20000)
                 .writeTimeOut(20000)
-                .execute(new BitmapCallback()
-                {
+                .execute(new BitmapCallback() {
                     @Override
-                    public void onError(Call call, Exception e)
-                    {
+                    public void onError(Call call, Exception e) {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(Bitmap bitmap)
-                    {
+                    public void onResponse(Bitmap bitmap) {
                         Log.e("TAG", "onResponse：complete");
                         mImageView.setImageBitmap(bitmap);
                     }
@@ -234,12 +249,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void uploadFile(View view)
-    {
+    public void uploadFile(View view) {
 
         File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
-        if (!file.exists())
-        {
+        if (!file.exists()) {
             Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -263,12 +276,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void multiFileUpload(View view)
-    {
+    public void multiFileUpload(View view) {
         File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
         File file2 = new File(Environment.getExternalStorageDirectory(), "test1#.txt");
-        if (!file.exists())
-        {
+        if (!file.exists()) {
             Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -287,8 +298,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void downloadFile(View view)
-    {
+    public void downloadFile(View view) {
         String url = "https://github.com/hongyangAndroid/okhttp-utils/blob/master/okhttputils-2_4_1.jar?raw=true";
         OkHttpUtils//
                 .get()//
@@ -298,35 +308,30 @@ public class MainActivity extends AppCompatActivity
                 {
 
                     @Override
-                    public void onBefore(Request request)
-                    {
+                    public void onBefore(Request request) {
                         super.onBefore(request);
                     }
 
                     @Override
-                    public void inProgress(float progress, long total)
-                    {
+                    public void inProgress(float progress, long total) {
                         mProgressBar.setProgress((int) (100 * progress));
                         Log.e(TAG, "inProgress :" + (int) (100 * progress));
                     }
 
                     @Override
-                    public void onError(Call call, Exception e)
-                    {
+                    public void onError(Call call, Exception e) {
                         Log.e(TAG, "onError :" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(File file)
-                    {
+                    public void onResponse(File file) {
                         Log.e(TAG, "onResponse :" + file.getAbsolutePath());
                     }
                 });
     }
 
 
-    public void otherRequestDemo(View view)
-    {
+    public void otherRequestDemo(View view) {
         //also can use delete ,head , patch
         /*
         OkHttpUtils
@@ -351,19 +356,16 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void clearSession(View view)
-    {
+    public void clearSession(View view) {
         CookieJar cookieJar = OkHttpUtils.getInstance().getOkHttpClient().cookieJar();
-        if (cookieJar instanceof CookieJarImpl)
-        {
-            ((CookieJarImpl)cookieJar).getCookieStore().removeAll();
+        if (cookieJar instanceof CookieJarImpl) {
+            ((CookieJarImpl) cookieJar).getCookieStore().removeAll();
         }
     }
 
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(this);
     }

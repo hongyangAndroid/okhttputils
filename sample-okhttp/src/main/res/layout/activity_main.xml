@@ -1,13 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
     <com.zhy.sample_okhttp.FlowLayout
         android:layout_width="match_parent"
@@ -18,69 +18,73 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="getHtml"
-            android:text="Get Html"/>
+            android:text="Get Html" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="postFile"
-            android:text="Post File"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="postString"
-            android:text="Post String"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="getHttpsHtml"
-            android:text="Get Https Html"/>
+            android:onClick="delete"
+            android:text="Delete" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="getUser"
-            android:text="Get User"/>
+            android:text="Get Users" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="getUsers"
-            android:text="Get Users"/>
+            android:onClick="postOutThis"
+            android:text="postOutThis" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="login"
+            android:text="Login" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getMac"
+            android:text="Get Users" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="getImage"
-            android:text="Get Image"/>
+            android:text="Get Image" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="uploadFile"
-            android:text="Upload File"/>
+            android:text="Upload File" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="multiFileUpload"
-            android:text="Multi Upload Files"/>
+            android:text="Multi Upload Files" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="downloadFile"
-            android:text="Download File"/>
+            android:text="Download File" />
 
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:onClick="otherRequestDemo"
-                android:text="otherRequestDemo"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="otherRequestDemo"
+            android:text="otherRequestDemo" />
 
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:onClick="clearSession"
-                android:text="clearSession"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clearSession"
+            android:text="clearSession" />
 
     </com.zhy.sample_okhttp.FlowLayout>
 
@@ -88,18 +92,23 @@
         android:id="@+id/id_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/id_textview"
+    <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/id_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_world" />
+    </ScrollView>
 
     <ImageView
         android:id="@+id/id_imageview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>
