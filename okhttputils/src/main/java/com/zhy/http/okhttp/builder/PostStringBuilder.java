@@ -29,7 +29,7 @@ public class PostStringBuilder extends OkHttpRequestBuilder<PostStringBuilder>
     @Override
     public RequestCall build()
     {
-        return new PostStringRequest(url, tag, params, headers, content, mediaType).build();
+        return new PostStringRequest(url, tag, params, headers, content, mediaType,id).build();
     }
 
 

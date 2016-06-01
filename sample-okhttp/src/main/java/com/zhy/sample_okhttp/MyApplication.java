@@ -4,9 +4,8 @@ import android.app.Application;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
-import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
+import com.zhy.http.okhttp.cookie.store.MemoryCookieStore;
 import com.zhy.http.okhttp.https.HttpsUtils;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,14 +39,15 @@ public class MyApplication extends Application
 
 //        ClearableCookieJar cookieJar1 = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getApplicationContext()));
 
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
 
-        CookieJarImpl cookieJar1 = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
+        CookieJarImpl cookieJar1 = new CookieJarImpl(new MemoryCookieStore());
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                .addInterceptor(new LoggerInterceptor("TAG"))
-//                .cookieJar(cookieJar1)
-                .sslSocketFactory(HttpsUtils.getSslSocketFactory(null, null, null))
+//                .addInterceptor(new LoggerInterceptor("TAG"))
+                .cookieJar(cookieJar1)
+                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .build();
         OkHttpUtils.initClient(okHttpClient);
 

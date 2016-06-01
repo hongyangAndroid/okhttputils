@@ -15,7 +15,7 @@ public abstract class ListUserCallback extends Callback<List<User>>
 {
 
     @Override
-    public List<User> parseNetworkResponse(Response response) throws IOException
+    public List<User> parseNetworkResponse(Response response,int id) throws IOException
     {
         String string = response.body().string();
         List<User> user = new Gson().fromJson(string, List.class);

@@ -23,9 +23,9 @@ public class OtherRequest extends OkHttpRequest
     private String method;
     private String content;
 
-    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers)
+    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers,int id)
     {
-        super(url, tag, params, headers);
+        super(url, tag, params, headers,id);
         this.requestBody = requestBody;
         this.method = method;
         this.content = content;

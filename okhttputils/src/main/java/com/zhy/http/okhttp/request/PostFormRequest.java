@@ -25,9 +25,9 @@ public class PostFormRequest extends OkHttpRequest
 {
     private List<PostFormBuilder.FileInput> files;
 
-    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files)
+    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files,int id)
     {
-        super(url, tag, params, headers);
+        super(url, tag, params, headers,id);
         this.files = files;
     }
 
@@ -70,7 +70,7 @@ public class PostFormRequest extends OkHttpRequest
                     @Override
                     public void run()
                     {
-                        callback.inProgress(bytesWritten * 1.0f / contentLength);
+                        callback.inProgress(bytesWritten * 1.0f / contentLength,contentLength,id);
                     }
                 });
 

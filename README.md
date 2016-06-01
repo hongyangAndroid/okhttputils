@@ -1,19 +1,19 @@
 # okhttp-utils
 对okhttp的封装类，okhttp见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 
-
+目前对应okhttp版本`3.3.1`.
 
 ## 用法
 
 * Android Studio
 	
 	```
-	compile 'com.zhy:okhttputils:2.5.2'
+	compile 'com.zhy:okhttputils:2.6.1'
 	```
 	
 * Eclipse
 	
-	下载最新jar:[okhttputils-2\_5\_2.jar](okhttputils-2_5_2.jar?raw=true)
+	下载最新jar:[okhttputils-2\_6\_1.jar](okhttputils-2_6_1.jar?raw=true)
 
 	注：需要同时导入okhttp和okio的jar，下载见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 	
@@ -101,8 +101,9 @@ OkHttpUtils.initClient(okHttpClient);
 * 设置可访问所有的https网站
 
 ```
+HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-        .sslSocketFactory(HttpsUtils.getSslSocketFactory(null, null, null))
+        .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
          //其他配置
          .build();
 OkHttpUtils.initClient(okHttpClient);
@@ -111,8 +112,9 @@ OkHttpUtils.initClient(okHttpClient);
 * 设置具体的证书
 
 ```
+HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(证书的inputstream, null, null);
 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-        .sslSocketFactory(HttpsUtils.getSslSocketFactory(证书的inputstream, null, null))
+        .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager))
          //其他配置
          .build();
 OkHttpUtils.initClient(okHttpClient);

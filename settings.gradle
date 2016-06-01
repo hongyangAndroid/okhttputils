@@ -1,1 +1,1 @@
-include ':okhttputils', ':sample-okhttp', ':okhttp3-persistent-cookiejar'
+include ':okhttputils', ':sample-okhttp'

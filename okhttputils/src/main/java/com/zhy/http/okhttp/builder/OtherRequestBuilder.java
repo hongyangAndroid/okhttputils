@@ -22,7 +22,7 @@ public class OtherRequestBuilder extends OkHttpRequestBuilder<OtherRequestBuilde
     @Override
     public RequestCall build()
     {
-        return new OtherRequest(requestBody, content, method, url, tag, params, headers).build();
+        return new OtherRequest(requestBody, content, method, url, tag, params, headers,id).build();
     }
 
     public OtherRequestBuilder requestBody(RequestBody requestBody)

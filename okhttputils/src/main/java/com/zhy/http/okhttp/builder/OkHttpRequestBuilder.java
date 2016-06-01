@@ -14,6 +14,13 @@ public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder>
     protected Object tag;
     protected Map<String, String> headers;
     protected Map<String, String> params;
+    protected int id;
+
+    public T id(int id)
+    {
+        this.id = id;
+        return (T) this;
+    }
 
     public T url(String url)
     {

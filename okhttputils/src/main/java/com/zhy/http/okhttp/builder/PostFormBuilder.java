@@ -19,7 +19,7 @@ public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> imple
     @Override
     public RequestCall build()
     {
-        return new PostFormRequest(url, tag, params, headers, files).build();
+        return new PostFormRequest(url, tag, params, headers, files,id).build();
     }
 
     public PostFormBuilder files(String key, Map<String, File> files)

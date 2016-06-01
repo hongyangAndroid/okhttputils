@@ -31,16 +31,19 @@ public class RequestCall
     {
         this.okHttpRequest = request;
     }
+
     public RequestCall readTimeOut(long readTimeOut)
     {
         this.readTimeOut = readTimeOut;
         return this;
     }
+
     public RequestCall writeTimeOut(long writeTimeOut)
     {
         this.writeTimeOut = writeTimeOut;
         return this;
     }
+
     public RequestCall connTimeOut(long connTimeOut)
     {
         this.connTimeOut = connTimeOut;
@@ -82,7 +85,7 @@ public class RequestCall
 
         if (callback != null)
         {
-            callback.onBefore(request);
+            callback.onBefore(request, getOkHttpRequest().getId());
         }
 
         OkHttpUtils.getInstance().execute(this, callback);

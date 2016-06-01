@@ -43,35 +43,43 @@ public class MainActivity extends AppCompatActivity
     public class MyStringCallback extends StringCallback
     {
         @Override
-        public void onBefore(Request request)
+        public void onBefore(Request request, int id)
         {
-            super.onBefore(request);
             setTitle("loading...");
         }
 
         @Override
-        public void onAfter()
+        public void onAfter(int id)
         {
-            super.onAfter();
             setTitle("Sample-okHttp");
         }
 
         @Override
-        public void onError(Call call, Exception e)
+        public void onError(Call call, Exception e, int id)
         {
             e.printStackTrace();
             mTv.setText("onError:" + e.getMessage());
         }
 
         @Override
-        public void onResponse(String response)
+        public void onResponse(String response, int id)
         {
             Log.e(TAG, "onResponse：complete");
             mTv.setText("onResponse:" + response);
+
+            switch (id)
+            {
+                case 100:
+                    Toast.makeText(MainActivity.this, "http", Toast.LENGTH_SHORT).show();
+                    break;
+                case 101:
+                    Toast.makeText(MainActivity.this, "https", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
 
         @Override
-        public void inProgress(float progress)
+        public void inProgress(float progress, long total, int id)
         {
             Log.e(TAG, "inProgress:" + progress);
             mProgressBar.setProgress((int) (100 * progress));
@@ -101,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         OkHttpUtils
                 .get()
                 .url(url)
+                .id(100)
 //                .addHeader("Accept-Encoding","")
                 .build()
                 .execute(new MyStringCallback());
@@ -151,13 +160,13 @@ public class MainActivity extends AppCompatActivity
                 .execute(new UserCallback()
                 {
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(User response)
+                    public void onResponse(User response, int id)
                     {
                         mTv.setText("onResponse:" + response.username);
                     }
@@ -178,13 +187,13 @@ public class MainActivity extends AppCompatActivity
                 .execute(new ListUserCallback()//
                 {
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(List<User> response)
+                    public void onResponse(List<User> response, int id)
                     {
                         mTv.setText("onResponse:" + response);
                     }
@@ -199,6 +208,7 @@ public class MainActivity extends AppCompatActivity
         OkHttpUtils
                 .get()//
                 .url(url)//
+                .id(101)
                 .build()//
                 .execute(new MyStringCallback());
 
@@ -219,13 +229,13 @@ public class MainActivity extends AppCompatActivity
                 .execute(new BitmapCallback()
                 {
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(Bitmap bitmap)
+                    public void onResponse(Bitmap bitmap, int id)
                     {
                         Log.e("TAG", "onResponse：complete");
                         mImageView.setImageBitmap(bitmap);
@@ -298,26 +308,25 @@ public class MainActivity extends AppCompatActivity
                 {
 
                     @Override
-                    public void onBefore(Request request)
+                    public void onBefore(Request request, int id)
                     {
-                        super.onBefore(request);
                     }
 
                     @Override
-                    public void inProgress(float progress, long total)
+                    public void inProgress(float progress, long total, int id)
                     {
                         mProgressBar.setProgress((int) (100 * progress));
                         Log.e(TAG, "inProgress :" + (int) (100 * progress));
                     }
 
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         Log.e(TAG, "onError :" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(File file)
+                    public void onResponse(File file, int id)
                     {
                         Log.e(TAG, "onResponse :" + file.getAbsolutePath());
                     }
@@ -356,7 +365,7 @@ public class MainActivity extends AppCompatActivity
         CookieJar cookieJar = OkHttpUtils.getInstance().getOkHttpClient().cookieJar();
         if (cookieJar instanceof CookieJarImpl)
         {
-            ((CookieJarImpl)cookieJar).getCookieStore().removeAll();
+            ((CookieJarImpl) cookieJar).getCookieStore().removeAll();
         }
     }
 
