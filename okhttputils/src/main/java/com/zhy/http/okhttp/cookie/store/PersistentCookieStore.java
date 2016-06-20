@@ -90,7 +90,7 @@ public class PersistentCookieStore implements CookieStore
     {
         String name = getCookieToken(cookie);
 
-        if (!cookie.persistent())
+        if (cookie.persistent())
         {
             if (!cookies.containsKey(uri.host()))
             {
