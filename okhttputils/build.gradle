@@ -34,7 +34,7 @@ task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
     into('build/outputs/')
     include('classes.jar')
-    rename ('classes.jar', 'okhttputils-2_6_1.jar')
+    rename ('classes.jar', 'okhttputils-2_6_2.jar')
 }
 
 makeJar.dependsOn(clearJar, build)
@@ -51,7 +51,7 @@ publish {
     userOrg = 'hongyangandroid'//bintray.com用户名
     groupId = 'com.zhy'//jcenter上的路径
     artifactId = 'okhttputils'//项目名称
-    publishVersion = '2.6.1'//版本号
+    publishVersion = '2.6.2'//版本号
     desc = 'Oh hi, this is a nice description for a project, right?'
     website = 'https://github.com/hongyangAndroid/okhttp-utils'
 }

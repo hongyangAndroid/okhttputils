@@ -38,7 +38,8 @@ public class PostFormRequest extends OkHttpRequest
         {
             FormBody.Builder builder = new FormBody.Builder();
             addParams(builder);
-            return builder.build();
+            FormBody formBody = builder.build();
+            return formBody;
         } else
         {
             MultipartBody.Builder builder = new MultipartBody.Builder()

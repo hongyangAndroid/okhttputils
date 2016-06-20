@@ -31,7 +31,7 @@ import okhttp3.Request;
 public class MainActivity extends AppCompatActivity
 {
 
-    private String mBaseUrl = "http://192.168.56.1:8080/okHttpServer/";
+    private String mBaseUrl = "http://192.168.31.242:8888/okHttpServer/";
 
     private static final String TAG = "MainActivity";
 
@@ -104,17 +104,16 @@ public class MainActivity extends AppCompatActivity
 
     public void getHtml(View view)
     {
-        String url = "http://www.baidu.com";
-//        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
+        String url = "http://www.zhiyun-tech.com/App/Rider-M/changelog-zh.txt";
+        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
         OkHttpUtils
                 .get()
                 .url(url)
                 .id(100)
-//                .addHeader("Accept-Encoding","")
                 .build()
                 .execute(new MyStringCallback());
-
     }
+
 
     public void postString(View view)
     {
@@ -205,6 +204,8 @@ public class MainActivity extends AppCompatActivity
     {
         String url = "https://kyfw.12306.cn/otn/";
 
+//                "https://12
+//        url =3.125.219.144:8443/mobileConnect/MobileConnect/authLogin.action?systemid=100009&mobile=13260284063&pipe=2&reqtime=1422986580048&ispin=2";
         OkHttpUtils
                 .get()//
                 .url(url)//

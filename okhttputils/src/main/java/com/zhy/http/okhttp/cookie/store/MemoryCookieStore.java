@@ -21,21 +21,29 @@ public class MemoryCookieStore implements CookieStore
     {
         List<Cookie> oldCookies = allCookies.get(url.host());
 
-        Iterator<Cookie> itNew = cookies.iterator();
-        Iterator<Cookie> itOld = oldCookies.iterator();
-        while (itNew.hasNext())
+        if (oldCookies != null)
         {
-            String va = itNew.next().name();
-            while (va != null && itOld.hasNext())
+            Iterator<Cookie> itNew = cookies.iterator();
+            Iterator<Cookie> itOld = oldCookies.iterator();
+            while (itNew.hasNext())
             {
-                String v = itOld.next().name();
-                if (v != null && va.equals(v))
+                String va = itNew.next().name();
+                while (va != null && itOld.hasNext())
                 {
-                    itOld.remove();
+                    String v = itOld.next().name();
+                    if (v != null && va.equals(v))
+                    {
+                        itOld.remove();
+                    }
                 }
             }
+            oldCookies.addAll(cookies);
+        } else
+        {
+            allCookies.put(url.host(), cookies);
         }
-        oldCookies.addAll(cookies);
+
+
     }
 
     @Override
@@ -74,7 +82,7 @@ public class MemoryCookieStore implements CookieStore
     @Override
     public boolean remove(HttpUrl uri, Cookie cookie)
     {
-        List<Cookie> cookies = allCookies.get(uri);
+        List<Cookie> cookies = allCookies.get(uri.host());
         if (cookie != null)
         {
             return cookies.remove(cookie);

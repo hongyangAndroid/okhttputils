@@ -130,26 +130,29 @@ public class OkHttpUtils
             @Override
             public void onResponse(final Call call, final Response response)
             {
-                if (call.isCanceled())
-                {
-                    sendFailResultCallback(call, new IOException("Canceled!"), finalCallback, id);
-                    return;
-                }
-
-                if (!finalCallback.validateReponse(response, id))
-                {
-                    sendFailResultCallback(call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback, id);
-                    return;
-                }
-
                 try
                 {
+                    if (call.isCanceled())
+                    {
+                        sendFailResultCallback(call, new IOException("Canceled!"), finalCallback, id);
+                        return;
+                    }
+
+                    if (!finalCallback.validateReponse(response, id))
+                    {
+                        sendFailResultCallback(call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback, id);
+                        return;
+                    }
+
                     Object o = finalCallback.parseNetworkResponse(response, id);
                     sendSuccessResultCallback(o, finalCallback, id);
                 } catch (Exception e)
                 {
                     sendFailResultCallback(call, e, finalCallback, id);
-
+                } finally
+                {
+                    if (response.body() != null)
+                        response.body().close();
                 }
 
             }
