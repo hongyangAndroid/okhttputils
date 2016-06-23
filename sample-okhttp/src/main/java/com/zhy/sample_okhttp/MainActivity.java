@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
+import com.zhy.http.okhttp.callback.GenericsCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity
                 .addParams("username", "hyman")//
                 .addParams("password", "123")//
                 .build()//
-                .execute(new UserCallback()
+                .execute(new GenericsCallback<User>(new JsonGenericsSerializator())
                 {
                     @Override
                     public void onError(Call call, Exception e, int id)
