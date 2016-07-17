@@ -1,4 +1,4 @@
-package com.administrator.ticat.AsyncTask;
+package com.huangxy.XhttpUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Types;
@@ -22,6 +22,7 @@ public abstract class XHttpCallBack<T> extends Callback<T> {
         if (getClass().getGenericSuperclass() == XHttpCallBack.class){
             return (T)result;// 默认返回String
         }
+        // 这句重点，同时支持T、List<T>等等
         Type type = $Gson$Types.canonicalize(((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         try {
             return new Gson().fromJson(result, type);
