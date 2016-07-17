@@ -7,9 +7,9 @@
 
 * Android Studio
 	
-	```
-	compile 'com.zhy:okhttputils:2.6.2'
-	```
+```groovy
+compile 'com.zhy:okhttputils:2.6.2'
+```
 	
 * Eclipse
 	
@@ -60,7 +60,7 @@ public class MyApplication extends Application
 
 对于cookie一样，直接通过cookiejar方法配置，参考上面的配置过程。
 
-```
+```java
 CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
 OkHttpClient okHttpClient = new OkHttpClient.Builder()
           .cookieJar(cookieJar)
@@ -85,7 +85,7 @@ OkHttpUtils.initClient(okHttpClient);
 
 初始化OkhttpClient时，通过设置拦截器实现，框架中提供了一个`LoggerInterceptor `，当然你可以自行实现一个Interceptor 。
 
-```
+```java
  OkHttpClient okHttpClient = new OkHttpClient.Builder()
        .addInterceptor(new LoggerInterceptor("TAG"))
         //其他配置
@@ -100,7 +100,7 @@ OkHttpUtils.initClient(okHttpClient);
 
 * 设置可访问所有的https网站
 
-```
+```java
 HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
 OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
@@ -111,7 +111,7 @@ OkHttpUtils.initClient(okHttpClient);
 
 * 设置具体的证书
 
-```
+```java
 HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(证书的inputstream, null, null);
 OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager))
@@ -122,7 +122,7 @@ OkHttpUtils.initClient(okHttpClient);
 
 * 双向认证
 
-```
+```java
 HttpsUtils.getSslSocketFactory(
 	证书的inputstream, 
 	本地证书的inputstream, 
@@ -346,7 +346,7 @@ OkHttpUtils
 
 ### 同步的请求
 
-```
+```java
  Response response = OkHttpUtils
     .get()//
     .url(url)//
@@ -408,9 +408,3 @@ protected void onDestroy()
 
 
 ```
-
-
-
-
-
-
