@@ -19,6 +19,12 @@ public abstract class XHttpCallBack<T> extends Callback<T> {
     @Override
     public T parseNetworkResponse(Response response, int id) throws Exception {
         String result = response.body().string();
+        try {
+            result = unBunding(result);
+        }catch (Exception e){
+            onParser(e, id);
+            return null;
+        }
         if (getClass().getGenericSuperclass() == XHttpCallBack.class){
             return (T)result;// 默认返回String
         }
@@ -37,6 +43,7 @@ public abstract class XHttpCallBack<T> extends Callback<T> {
 
     @Override
     public void onResponse(T response, int id) {
+        //if (response != null)
         onSuccess(response, id);
     }
 
@@ -49,5 +56,25 @@ public abstract class XHttpCallBack<T> extends Callback<T> {
         System.out.println("数据解析错误，统一处理"+e);
     }
 
+    public String unBunding(String json) throws JSONException {
+        // 很多情况下返回的json是这种格式的, 统一处理
+        // 这里只适用于处理获取一个返回Json串，如果要同时获取多个data1、data2...，建议直接Entity返回
+//        {
+//            "code": 0,
+//            "msg": "上传成功",
+//            "data": [
+//                  {
+//                      "id": 1,
+//                      "name": "huangxy"
+//                  }
+//            ]
+//        }
+//        //JSONArray array = new JSONArray(json);
+//        JSONObject obj = new JSONObject(json);
+//        return obj.getString("data");
+        return json;
+    }
+
     public abstract void onSuccess(T result, int id);
+    
 }
