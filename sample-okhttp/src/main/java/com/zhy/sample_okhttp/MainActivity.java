@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
                 });
     }
     
-    public XHttpUtilsDemo()
+    public void XHttpUtilsDemo()
     { 
         String url = "https://github.com/GitSmark";
 
