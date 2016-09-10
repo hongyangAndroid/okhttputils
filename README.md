@@ -172,18 +172,19 @@ OkHttpUtils
 
 ```
 
-### Post String
+### Post JSON
 
 ```java
   OkHttpUtils
     .postString()
     .url(url)
     .content(new Gson().toJson(new User("zhy", "123")))
+     .mediaType(MediaType.parse("application/json; charset=utf-8"))
     .build()
     .execute(new MyStringCallback());
 ```
 
-提交一个Gson字符串到服务器端。
+提交一个Gson字符串到服务器端，注意：传递JSON的时候，不要通过addHeader去设置contentType，而使用`.mediaType(MediaType.parse("application/json; charset=utf-8"))`.。
 
 ### Post File
 
