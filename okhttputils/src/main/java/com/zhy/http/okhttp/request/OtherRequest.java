@@ -66,6 +66,9 @@ public class OtherRequest extends OkHttpRequest
         } else if (method.equals(OkHttpUtils.METHOD.PATCH))
         {
             builder.patch(requestBody);
+        } else if (method.equals(OkHttpUtils.METHOD.POST)）
+        {
+            builder.post(requestBody);
         }
 
         return builder.build();
