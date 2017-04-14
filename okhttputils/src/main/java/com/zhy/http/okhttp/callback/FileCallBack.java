@@ -23,7 +23,6 @@ public abstract class FileCallBack extends Callback<File>
      */
     private String destFileName;
 
-    public abstract void inProgress(float progress,long total);
 
     public FileCallBack(String destFileDir, String destFileName)
     {
@@ -33,13 +32,13 @@ public abstract class FileCallBack extends Callback<File>
 
 
     @Override
-    public File parseNetworkResponse(Response response) throws Exception
+    public File parseNetworkResponse(Response response, int id) throws Exception
     {
-        return saveFile(response);
+        return saveFile(response,id);
     }
 
 
-    public File saveFile(Response response) throws IOException
+    public File saveFile(Response response,final int id) throws IOException
     {
         InputStream is = null;
         byte[] buf = new byte[2048];
@@ -49,6 +48,7 @@ public abstract class FileCallBack extends Callback<File>
         {
             is = response.body().byteStream();
             final long total = response.body().contentLength();
+
             long sum = 0;
 
             File dir = new File(destFileDir);
@@ -63,13 +63,13 @@ public abstract class FileCallBack extends Callback<File>
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
-                OkHttpUtils.getInstance().getDelivery().post(new Runnable()
+                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
                     public void run()
                     {
 
-                        inProgress(finalSum * 1.0f / total,total);
+                        inProgress(finalSum * 1.0f / total,total,id);
                     }
                 });
             }
@@ -81,6 +81,7 @@ public abstract class FileCallBack extends Callback<File>
         {
             try
             {
+                response.body().close();
                 if (is != null) is.close();
             } catch (IOException e)
             {

@@ -1,64 +1,137 @@
 # okhttp-utils
 对okhttp的封装类，okhttp见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 
-
+目前对应okhttp版本`3.3.1`.
 
 ## 用法
 
 * Android Studio
-
-	使用前，对于Android Studio的用户，可以选择添加:
-
-	```
-	compile project(':okhttputils')
-	```
-	
-	或者
 	
 	```
-	compile 'com.zhy:okhttputils:2.3.9'
+	compile 'com.zhy:okhttputils:2.6.2'
 	```
 	
 * Eclipse
 	
-	下载最新jar:[okhttputils-2_3_9.jar](okhttputils-2_3_9.jar?raw=true)
+	下载最新jar:[okhttputils-2\_6\_2.jar](okhttputils-2_6_2.jar?raw=true)
 
 	注：需要同时导入okhttp和okio的jar，下载见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 	
 
-**注意**
-
-目前最新版本取消了依赖Gson，提供了自定Callback，可以按照下面的方式，自行解析返回结果：
-
-```java
-public abstract class UserCallback extends Callback<User>
-{
-	//非UI线程，支持任何耗时操作
-    @Override
-    public User parseNetworkResponse(Response response) throws IOException
-    {
-        String string = response.body().string();
-        User user = new Gson().fromJson(string, User.class);
-        return user;
-    }
-}
-```
-
-
-
-##目前支持
+## 目前对以下需求进行了封装
 * 一般的get请求
 * 一般的post请求
 * 基于Http Post的文件上传（类似表单）
 * 文件下载/加载图片
 * 上传下载的进度回调
-* 支持session的保持
-* 支持自签名网站https的访问，提供方法设置下证书就行
 * 支持取消某个请求
 * 支持自定义Callback
 * 支持HEAD、DELETE、PATCH、PUT
+* 支持session的保持
+* 支持自签名网站https的访问，提供方法设置下证书就行
 
-##用法示例
+## 配置OkhttpClient
+
+默认情况下，将直接使用okhttp默认的配置生成OkhttpClient，如果你有任何配置，记得在Application中调用`initClient`方法进行设置。
+
+```java
+public class MyApplication extends Application
+{	
+	@Override
+    public void onCreate()
+    {
+        super.onCreate();
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .addInterceptor(new LoggerInterceptor("TAG"))
+                  .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                  .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                  //其他配置
+                 .build();
+                 
+        OkHttpUtils.initClient(okHttpClient);
+
+    }
+}
+```
+别忘了在AndroidManifest中设置。
+
+## 对于Cookie(包含Session)
+
+对于cookie一样，直接通过cookiejar方法配置，参考上面的配置过程。
+
+```
+CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
+OkHttpClient okHttpClient = new OkHttpClient.Builder()
+          .cookieJar(cookieJar)
+          //其他配置
+         .build();
+                 
+OkHttpUtils.initClient(okHttpClient);
+```
+目前项目中包含：
+
+* PersistentCookieStore //持久化cookie
+* SerializableHttpCookie //持久化cookie
+* MemoryCookieStore //cookie信息存在内存中
+
+如果遇到问题，欢迎反馈，当然也可以自己实现CookieJar接口，编写cookie管理相关代码。
+
+此外，对于持久化cookie还可以使用[https://github.com/franmontiel/PersistentCookieJar](https://github.com/franmontiel/PersistentCookieJar).
+
+相当于框架中只是提供了几个实现类，你可以自行定制或者选择使用。
+
+## 对于Log
+
+初始化OkhttpClient时，通过设置拦截器实现，框架中提供了一个`LoggerInterceptor `，当然你可以自行实现一个Interceptor 。
+
+```
+ OkHttpClient okHttpClient = new OkHttpClient.Builder()
+       .addInterceptor(new LoggerInterceptor("TAG"))
+        //其他配置
+        .build();
+OkHttpUtils.initClient(okHttpClient);
+```
+
+
+## 对于Https
+
+依然是通过配置即可，框架中提供了一个类`HttpsUtils`
+
+* 设置可访问所有的https网站
+
+```
+HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
+         //其他配置
+         .build();
+OkHttpUtils.initClient(okHttpClient);
+```
+
+* 设置具体的证书
+
+```
+HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(证书的inputstream, null, null);
+OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager))
+         //其他配置
+         .build();
+OkHttpUtils.initClient(okHttpClient);
+```
+
+* 双向认证
+
+```
+HttpsUtils.getSslSocketFactory(
+	证书的inputstream, 
+	本地证书的inputstream, 
+	本地证书的密码)
+```
+
+同样的，框架中只是提供了几个实现类，你可以自行实现`SSLSocketFactory`，传入sslSocketFactory即可。
+
+##其他用法示例
 
 ### GET请求
 
@@ -99,18 +172,19 @@ OkHttpUtils
 
 ```
 
-### Post String
+### Post JSON
 
 ```java
   OkHttpUtils
     .postString()
     .url(url)
     .content(new Gson().toJson(new User("zhy", "123")))
+     .mediaType(MediaType.parse("application/json; charset=utf-8"))
     .build()
     .execute(new MyStringCallback());
 ```
 
-提交一个Gson字符串到服务器端。
+提交一个Gson字符串到服务器端，注意：传递JSON的时候，不要通过addHeader去设置contentType，而使用`.mediaType(MediaType.parse("application/json; charset=utf-8"))`.。
 
 ### Post File
 
@@ -284,92 +358,6 @@ OkHttpUtils
 
 execute方法不传入callback即为同步的请求，返回Response。
 
-## 配置
-
-### 全局配置
-
-可以在Application中，通过：
-
-```java
-OkHttpUtils.getInstance().setXXX()
-```
-
-如果需要完全配置OkHttpClient
-
-```java
-OkHttpUtils.getInstance(new OkHttpClient.Builder().setXXX().build());
-```
-
-即完全的自己构造OkHttpClient，然后传入getInstance(okHttpClient)方法。
-
-
-### 为单个请求设置超时
-
-比如涉及到文件的需要设置读写等待时间多一点。
-
-```java
- OkHttpUtils
-    .get()//
-    .url(url)//
-    .tag(this)//
-    .build()//
-    .connTimeOut(20000)
-    .readTimeOut(20000)
-    .writeTimeOut(20000)
-    .execute()
-```
-调用build()之后，可以随即设置各种timeOut.
-
-### 自签名网站https的访问
-
-非常简单，拿到xxx.cert的证书。
-
-然后调用
-
-```xml
-OkHttpUtils.getInstance()
-       .setCertificates(inputstream);
-```
-
-建议使用方式，例如我的证书放在assets目录：
-
-```java
-
-/**
- * Created by zhy on 15/8/25.
- */
-public class MyApplication extends Application
-{
-    @Override
-    public void onCreate()
-    {
-        super.onCreate();
-
-        OkHttpUtils.getInstance().setCertificates(new InputStream[]{
-                       new Buffer()
-                       .writeUtf8(CER_12306)
-                       .inputStream()});
-    }
-}
-```
-即可。别忘了注册Application。
-
-
-使用https，但是默认信任所有证书
-
-```
-OkHttpUtils.getInstance().setCertificates();
-```
-
-
-### Debug信息
-
-在Application的onCreate方法中通过debug方法开启
-
-```java
- OkHttpUtils.getInstance().debug("testDebug");
-```
-
 
 ### 取消单个请求
 
@@ -408,17 +396,17 @@ protected void onDestroy()
 #okhttputils
 -dontwarn com.zhy.http.**
 -keep class com.zhy.http.**{*;}
--keep interface com.zhy.http.**{*;}
+
 
 #okhttp
 -dontwarn okhttp3.**
 -keep class okhttp3.**{*;}
--keep interface okhttp3.**{*;}
+
 
 #okio
 -dontwarn okio.**
 -keep class okio.**{*;}
--keep interface okio.**{*;}
+
 
 ```
 

@@ -93,14 +93,26 @@ public class PersistentCookieStore implements CookieStore
         if (cookie.persistent())
         {
             if (!cookies.containsKey(uri.host()))
+            {
                 cookies.put(uri.host(), new ConcurrentHashMap<String, Cookie>());
+            }
             cookies.get(uri.host()).put(name, cookie);
+        } else
+        {
+            if (cookies.containsKey(uri.host()))
+            {
+                cookies.get(uri.host()).remove(name);
+            }else
+            {
+                return ;
+            }
         }
+
         // Save cookie into persistent store
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host()).keySet()));
         prefsWriter.putString(COOKIE_NAME_PREFIX + name, encodeCookie(new SerializableHttpCookie(cookie)));
-        prefsWriter.commit();
+        prefsWriter.apply();
     }
 
     protected String getCookieToken(Cookie cookie)
@@ -149,7 +161,7 @@ public class PersistentCookieStore implements CookieStore
     {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.clear();
-        prefsWriter.commit();
+        prefsWriter.apply();
         cookies.clear();
         return true;
     }
@@ -170,7 +182,7 @@ public class PersistentCookieStore implements CookieStore
                 prefsWriter.remove(COOKIE_NAME_PREFIX + name);
             }
             prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host()).keySet()));
-            prefsWriter.commit();
+            prefsWriter.apply();
 
             return true;
         } else

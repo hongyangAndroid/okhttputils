@@ -15,7 +15,9 @@ import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
+import com.zhy.http.okhttp.callback.GenericsCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
+import com.zhy.http.okhttp.cookie.CookieJarImpl;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,14 +25,14 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.CookieJar;
 import okhttp3.MediaType;
 import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity
 {
 
-
-    private String mBaseUrl = "http://192.168.1.102:8080/okHttpServer/";
+    private String mBaseUrl = "http://192.168.31.242:8888/okHttpServer/";
 
     private static final String TAG = "MainActivity";
 
@@ -42,34 +44,43 @@ public class MainActivity extends AppCompatActivity
     public class MyStringCallback extends StringCallback
     {
         @Override
-        public void onBefore(Request request)
+        public void onBefore(Request request, int id)
         {
-            super.onBefore(request);
             setTitle("loading...");
         }
 
         @Override
-        public void onAfter()
+        public void onAfter(int id)
         {
-            super.onAfter();
             setTitle("Sample-okHttp");
         }
 
         @Override
-        public void onError(Call call, Exception e)
+        public void onError(Call call, Exception e, int id)
         {
             e.printStackTrace();
             mTv.setText("onError:" + e.getMessage());
         }
 
         @Override
-        public void onResponse(String response)
+        public void onResponse(String response, int id)
         {
+            Log.e(TAG, "onResponse：complete");
             mTv.setText("onResponse:" + response);
+
+            switch (id)
+            {
+                case 100:
+                    Toast.makeText(MainActivity.this, "http", Toast.LENGTH_SHORT).show();
+                    break;
+                case 101:
+                    Toast.makeText(MainActivity.this, "https", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
 
         @Override
-        public void inProgress(float progress)
+        public void inProgress(float progress, long total, int id)
         {
             Log.e(TAG, "inProgress:" + progress);
             mProgressBar.setProgress((int) (100 * progress));
@@ -80,8 +91,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mTv = (TextView) findViewById(R.id.id_textview);
         mImageView = (ImageView) findViewById(R.id.id_imageview);
@@ -91,16 +105,16 @@ public class MainActivity extends AppCompatActivity
 
     public void getHtml(View view)
     {
-        String url = "http://sec.mobile.tiancity.com/server/mobilesecurity/version.xml";
-//        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
+        String url = "http://www.zhiyun-tech.com/App/Rider-M/changelog-zh.txt";
+        url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
         OkHttpUtils
                 .get()
                 .url(url)
-//                .addHeader("Accept-Encoding","")
+                .id(100)
                 .build()
                 .execute(new MyStringCallback());
-
     }
+
 
     public void postString(View view)
     {
@@ -131,6 +145,7 @@ public class MainActivity extends AppCompatActivity
                 .build()
                 .execute(new MyStringCallback());
 
+
     }
 
     public void getUser(View view)
@@ -142,16 +157,16 @@ public class MainActivity extends AppCompatActivity
                 .addParams("username", "hyman")//
                 .addParams("password", "123")//
                 .build()//
-                .execute(new UserCallback()
+                .execute(new GenericsCallback<User>(new JsonGenericsSerializator())
                 {
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(User response)
+                    public void onResponse(User response, int id)
                     {
                         mTv.setText("onResponse:" + response.username);
                     }
@@ -172,13 +187,13 @@ public class MainActivity extends AppCompatActivity
                 .execute(new ListUserCallback()//
                 {
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(List<User> response)
+                    public void onResponse(List<User> response, int id)
                     {
                         mTv.setText("onResponse:" + response);
                     }
@@ -190,9 +205,12 @@ public class MainActivity extends AppCompatActivity
     {
         String url = "https://kyfw.12306.cn/otn/";
 
+//                "https://12
+//        url =3.125.219.144:8443/mobileConnect/MobileConnect/authLogin.action?systemid=100009&mobile=13260284063&pipe=2&reqtime=1422986580048&ispin=2";
         OkHttpUtils
                 .get()//
                 .url(url)//
+                .id(101)
                 .build()//
                 .execute(new MyStringCallback());
 
@@ -213,14 +231,15 @@ public class MainActivity extends AppCompatActivity
                 .execute(new BitmapCallback()
                 {
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         mTv.setText("onError:" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(Bitmap bitmap)
+                    public void onResponse(Bitmap bitmap, int id)
                     {
+                        Log.e("TAG", "onResponse：complete");
                         mImageView.setImageBitmap(bitmap);
                     }
                 });
@@ -259,7 +278,7 @@ public class MainActivity extends AppCompatActivity
     public void multiFileUpload(View view)
     {
         File file = new File(Environment.getExternalStorageDirectory(), "messenger_01.png");
-        File file2 = new File(Environment.getExternalStorageDirectory(), "test1.txt");
+        File file2 = new File(Environment.getExternalStorageDirectory(), "test1#.txt");
         if (!file.exists())
         {
             Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
@@ -282,7 +301,7 @@ public class MainActivity extends AppCompatActivity
 
     public void downloadFile(View view)
     {
-        String url = "https://github.com/hongyangAndroid/okhttp-utils/blob/master/gson-2.2.1.jar?raw=true";
+        String url = "https://github.com/hongyangAndroid/okhttp-utils/blob/master/okhttputils-2_4_1.jar?raw=true";
         OkHttpUtils//
                 .get()//
                 .url(url)//
@@ -291,25 +310,25 @@ public class MainActivity extends AppCompatActivity
                 {
 
                     @Override
-                    public void onBefore(Request request)
+                    public void onBefore(Request request, int id)
                     {
-                        super.onBefore(request);
                     }
 
                     @Override
-                    public void inProgress(float progress, long total)
+                    public void inProgress(float progress, long total, int id)
                     {
                         mProgressBar.setProgress((int) (100 * progress));
+                        Log.e(TAG, "inProgress :" + (int) (100 * progress));
                     }
 
                     @Override
-                    public void onError(Call call, Exception e)
+                    public void onError(Call call, Exception e, int id)
                     {
                         Log.e(TAG, "onError :" + e.getMessage());
                     }
 
                     @Override
-                    public void onResponse(File file)
+                    public void onResponse(File file, int id)
                     {
                         Log.e(TAG, "onResponse :" + file.getAbsolutePath());
                     }
@@ -345,7 +364,11 @@ public class MainActivity extends AppCompatActivity
 
     public void clearSession(View view)
     {
-        OkHttpUtils.getInstance().getCookieStore().removeAll();
+        CookieJar cookieJar = OkHttpUtils.getInstance().getOkHttpClient().cookieJar();
+        if (cookieJar instanceof CookieJarImpl)
+        {
+            ((CookieJarImpl) cookieJar).getCookieStore().removeAll();
+        }
     }
 
 
@@ -353,6 +376,6 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-//        OkHttpUtils.cancelTag(this);
+        OkHttpUtils.getInstance().cancelTag(this);
     }
 }

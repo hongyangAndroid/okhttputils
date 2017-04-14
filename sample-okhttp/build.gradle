@@ -18,12 +18,18 @@ android {
         }
 
     }
+
+    lintOptions{
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile project(':okhttputils')
-//    compile 'com.zhy:okhttputils:2.3.3'
+//    compile 'com.zhy:okhttputils:2.6.1'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
+    compile 'com.github.franmontiel:PersistentCookieJar:v0.9.3'
 }
