@@ -17,6 +17,7 @@ import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.GenericsCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
+import com.zhy.http.okhttp.callback.XHttpCallBack;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 
 import java.io.File;
@@ -199,7 +200,92 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
     }
+    
+    public void XHttpUtilsDemo()
+    { 
+        String url = "https://github.com/GitSmark";
 
+        OkHttpUtils
+            .get()
+            .url(url)
+            .addParams("param1", "value")
+            .addParams("param2", "value")
+            .build()
+            .execute(new XHttpCallBack() {
+
+                @Override
+                public void onSuccess(Object result, int id) {
+                    //Success
+                }
+            });
+
+        OkHttpUtils
+            .post()
+            .url(url)
+            .addParams("param1", "value")
+            .addParams("param2", "value")
+            .build()
+            .execute(new XHttpCallBack<User>() {
+
+                @Override
+                public void onSuccess(User result, int id) {
+                    //Success
+                }
+            });
+
+        OkHttpUtils
+            .post()
+            .url(url)
+            .addParams("param1", "value")
+            .addParams("param2", "value")
+            .build()
+            .execute(new XHttpCallBack<List<User>>() {
+
+                @Override
+                public void onSuccess(List<User> result, int id) {
+                    //Success
+                }
+
+                //@Override
+                //public void onParser(Exception e, int id) {
+                //   super.onParser(e, id);
+                //}
+            });
+
+        OkHttpUtils
+            .post()
+            .url(url)
+            .addParams("param1", "value")
+            .addParams("param2", "value")
+            .build()
+            .execute(new XHttpCallBack<BaseEntity<List<User>>>() {
+
+                @Override
+                public void onSuccess(BaseEntity<List<User>> result, int id) {
+                    //Success
+                }
+            });
+
+        OkHttpUtils
+            .post()
+            .url(url)
+            .addParams("param1", "value")
+            .addParams("param2", "value")
+            .build()
+            .execute(new XHttpCallBack<List<User>>() {
+
+                @Override
+                public String unBunding(String json) throws JSONException {
+                    JSONObject obj = new JSONObject(json);
+                    return obj.getString("data");
+                }
+
+                @Override
+                public void onSuccess(List<User> result, int id) {
+                    //Success
+                }
+            });
+    }
 
     public void getHttpsHtml(View view)
     {
