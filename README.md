@@ -1,4 +1,7 @@
 # okhttp-utils
+
+>由于个人原因，现已停止维护。
+
 对okhttp的封装类，okhttp见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
 
 目前对应okhttp版本`3.3.1`.
