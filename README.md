@@ -10,7 +10,7 @@
 
 * Android Studio
 	
-	```
+	``` gradle
 	compile 'com.zhy:okhttputils:2.6.2'
 	```
 	
@@ -134,7 +134,7 @@ HttpsUtils.getSslSocketFactory(
 
 同样的，框架中只是提供了几个实现类，你可以自行实现`SSLSocketFactory`，传入sslSocketFactory即可。
 
-##其他用法示例
+## 其他用法示例
 
 ### GET请求
 
