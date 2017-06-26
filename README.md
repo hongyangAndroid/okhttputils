@@ -372,7 +372,7 @@ execute方法不传入callback即为同步的请求，返回Response。
 
 ### 根据tag取消请求
 
-目前对于支持的方法都添加了最后一个参数`Object tag`，取消则通过` OkHttpUtils.cancelTag(tag)`执行。
+目前对于支持的方法都添加了最后一个参数`Object tag`，取消则通过` OkHttpUtils.getInstance().cancelTag(tag)`执行。
 
 例如：在Activity中，当Activity销毁取消请求：
 
@@ -388,7 +388,7 @@ protected void onDestroy()
 {
     super.onDestroy();
     //可以取消同一个tag的
-    OkHttpUtils.cancelTag(this);//取消以Activity.this作为tag的请求
+    OkHttpUtils.getInstance().cancelTag(this);//取消以Activity.this作为tag的请求
 }
 ```
 比如，当前Activity页面所有的请求以Activity对象作为tag，可以在onDestory里面统一取消。
