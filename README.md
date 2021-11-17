@@ -1,5 +1,7 @@
 # okhttp-utils
 
+[![Maintainability](https://cloud.quality-gate.com/dashboard/api/badge?projectName=hongyangAndroid_okhttputils&branchName=master)](https://cloud.quality-gate.com/dashboard/branches/95265#overview)
+
 >由于个人原因，现已停止维护。
 
 对okhttp的封装类，okhttp见：[https://github.com/square/okhttp](https://github.com/square/okhttp).
