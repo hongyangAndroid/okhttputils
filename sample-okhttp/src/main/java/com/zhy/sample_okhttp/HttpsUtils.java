@@ -1,4 +1,4 @@
-package com.zhy.http.okhttp.https;
+package com.zhy.sample_okhttp;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,11 +11,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -61,15 +59,6 @@ public class HttpsUtils
         } catch (KeyStoreException e)
         {
             throw new AssertionError(e);
-        }
-    }
-
-    private class UnSafeHostnameVerifier implements HostnameVerifier
-    {
-        @Override
-        public boolean verify(String hostname, SSLSession session)
-        {
-            return true;
         }
     }
 
