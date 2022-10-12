@@ -1,0 +1,20 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    repositories {
+        // Enter bintray.com info here
+        /*maven {
+            name "sonatype"
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username = project.properties["sonatype_username"]
+                password = project.properties["sonatype_password"]
+            }
+        }*/
+    }
+}
+
+signing {
+    sign publishing.publications
+}
